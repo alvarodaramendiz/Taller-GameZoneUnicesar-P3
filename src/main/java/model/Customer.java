@@ -1,13 +1,14 @@
 package model;
 
-public class Customer {
+public class Customer extends Person{
     private String eMail;
     //private Purchase purchase;
 
     public Customer() {
     }
-
-    public Customer(String eMail) {
+    
+    public Customer(String eMail, String name, long iD, long contactNumber) {
+        super(name, iD, contactNumber);
         this.eMail = eMail;
     }
 
