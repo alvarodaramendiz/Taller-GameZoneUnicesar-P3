@@ -2,7 +2,7 @@ package model;
 
 //import java.util.ArrayList;
 
-public class Seller {
+public class Seller extends Person{
     //Clase Seller (Vendedor). Hereda todos los atributos de Person pero agrega las características
     //unicas del Vendedor.
     private long employeeCode;
@@ -13,11 +13,11 @@ public class Seller {
     public Seller() {
     }
 
-    public Seller(long employeeCode, Shift shift) {
+    public Seller(long employeeCode, Shift shift, String name, long iD, long contactNumber) {
+        super(name, iD, contactNumber);
         this.employeeCode = employeeCode;
         this.shift = shift;
     }
-    
     
     public long getEmployeeCode() {
         return employeeCode;
