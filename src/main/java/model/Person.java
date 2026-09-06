@@ -1,6 +1,7 @@
 package model;
 
 public class Person {
+    //Clase abstracta Persona: De allí salen dos clases instanciables que heredan sus atributos
     private String name;
     private long iD;
     private long contactNumber;

@@ -34,7 +34,4 @@ public class Seller extends Person{
     public void setShift(Shift shift) {
         this.shift = shift;
     }
-    
-    //Metodos de la clase Seller: addSale, searchSale, removeSale
-    //Se agregarán a la clase en el momento en el que la clase Sale esté desarrollada
 }
