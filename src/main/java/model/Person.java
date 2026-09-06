@@ -12,6 +12,7 @@ public abstract class Person {
     private String name;
     private long iD;
     private long contactNumber;
+    
     public Person() {
     }
 
