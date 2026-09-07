@@ -1,4 +1,4 @@
-package model;
+package com.gamezone.model;
 /**
  * Represents a console in the GameZone Unicesar store.
  * Adds specific attributes like brand, model, and generation.
