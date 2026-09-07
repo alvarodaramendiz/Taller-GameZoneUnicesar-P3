@@ -1,6 +1,6 @@
-package persistence;
+package com.gamezone.persistence;
 
-import model.Customer;
+import com.gamezone.model.Customer;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
