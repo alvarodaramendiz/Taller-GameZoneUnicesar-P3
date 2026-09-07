@@ -1,7 +1,12 @@
 package com.gamezone;
 
+import com.gamezone.persistence.SalePersistence;
+import com.gamezone.service.SaleService;
+import com.gamezone.ui.UserInterface;
+
 /**
- *  Clase principal, conexión entre todas las capas de la arquitectura
+ *  Clase principal, conexión entre las capas de arquitectura persistencia, lógica y UI
+ * 
  * @author ALVARO
  */
 public class Main {
