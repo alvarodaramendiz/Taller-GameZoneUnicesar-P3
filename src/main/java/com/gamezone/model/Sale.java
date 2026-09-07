@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Dominio de venta que incorpora las transacciones de venta entre vendedor y cliente
  * @author ALVARO
  */
-public class Sale {
+public final class Sale {
     
     public class amountOf_product { // Clase que agrupa unidades y producto en una misma estructura
         
@@ -45,19 +45,18 @@ public class Sale {
     private LocalDate date; // Guardado de fecha local en formato año - mes - día
     private ArrayList<amountOf_product> productTrack; // 
     private Seller seller; // Vendedor que genera la venta
-    private Customer costumer; // Consumidor o Cliente que realiza la compra
+    private Customer customer; // Consumidor o Cliente que realiza la compra
+    private double totalValue; // Valor total monetario de la venta
     
-    // Constructores para inicialización vacía y parametrizada
+    // Constructores para inicialización parametrizada
     
-    public Sale() {
-    }
-
-    public Sale(long uId, LocalDate date, Seller seller, Customer costumer) {
+    public Sale(long uId, LocalDate date, ArrayList<amountOf_product> productTrack, Seller seller, Customer customer) {
         this.uId = uId;
         this.date = date;
-        this.productTrack = new ArrayList<>();
+        this.productTrack = productTrack;
         this.seller = seller;
-        this.costumer = costumer;
+        this.customer = customer;
+        this.totalValue = 0;
     }
     
     // Getters y setters para acceder a las variables de instancia
@@ -78,7 +77,7 @@ public class Sale {
         this.date = date;
     }
 
-    public ArrayList<amountOf_product> getProduct() {
+    public ArrayList<amountOf_product> getProductTrack() {
         return productTrack;
     }
 
@@ -94,15 +93,46 @@ public class Sale {
         this.seller = seller;
     }
 
-    public Customer getCostumer() {
-        return costumer;
+    public Customer getCustomer() {
+        return customer;
     }
 
     public void setCostumer(Customer costumer) {
-        this.costumer = costumer;
+        this.customer = costumer;
     }
     
     
     // Espacio para desarrollar posibles comportamientos del objeto personalizados
     
+    public double saleTotalValue() {
+        double resultValue = 0;
+        for (amountOf_product p: productTrack) {
+            double price;
+            double amount;
+            amount = p.getProductAmount();
+            price = p.getSoldProduct().getPrice();
+            resultValue+=(price*amount);
+        }
+        return resultValue;
+    }
+    
+    public String receiptGen() {
+        
+        StringBuilder saleReceipt = new StringBuilder();
+        int index = 0;
+        
+            saleReceipt.append("============== GAMEZONE UNICESAR FACTURA ==============");
+            saleReceipt.append("IDENTIFICADOR  :   ").append(uId);
+            saleReceipt.append("FECHA DE VENTA :   ").append(date);
+            saleReceipt.append("CLIENTE        :   ").append(customer);
+            saleReceipt.append("VENDEDOR       :   ").append(seller);
+            saleReceipt.append("================ PRODUCTOS ADQUIRIDOS =================");
+        for (amountOf_product e: productTrack) {
+            index++;
+            saleReceipt.append("PRODUCTO  #").append(index).append("  : ").append(e.getSoldProduct());
+            saleReceipt.append("CANTIDAD       : ").append(e.getProductAmount());
+        }
+            saleReceipt.append("VALOR TOTAL    : ").append(totalValue);
+        return saleReceipt.toString();
+    }
 }
