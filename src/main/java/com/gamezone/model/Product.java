@@ -1,4 +1,4 @@
-package model;
+package com.gamezone.model;
 
 /**
  * Base class for all products in the GameZone Unicesar store.

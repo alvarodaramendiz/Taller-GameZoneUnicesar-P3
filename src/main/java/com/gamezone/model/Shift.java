@@ -1,4 +1,4 @@
-package model;
+package com.gamezone.model;
 
 /** 
  * Defines the employee shift for every GameZone seller

@@ -1,4 +1,4 @@
-package model;
+package com.gamezone.model;
 
 /**
  * Base Abstract Class for every person in GameZone Unicesar
