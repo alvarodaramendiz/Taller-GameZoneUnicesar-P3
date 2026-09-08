@@ -72,4 +72,9 @@ public class Seller extends Person{
     public void setShift(Shift shift) {
         this.shift = shift;
     }
+    
+    @Override
+    public String toText() {
+        return getiD() + "|" + employeeCode + "|" + getName() + "|" + shift + "|" + getContactNumber();
+    }
 }
