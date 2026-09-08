@@ -47,4 +47,8 @@ public class Customer extends Person{
     public void seteMail(String eMail) {
         this.eMail = eMail;
     }
+    
+    public String toText(){
+        return getiD() + "|" + getName() + "|" + eMail + "|" + getContactNumber();
+    }
 }
