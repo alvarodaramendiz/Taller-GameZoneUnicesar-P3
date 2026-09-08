@@ -84,5 +84,8 @@ public abstract class Person {
         this.contactNumber = contactNumber;
     }
     
+    public String toText() {
+        return iD + "|" + name + "|" + contactNumber;
+    }
     
 }
