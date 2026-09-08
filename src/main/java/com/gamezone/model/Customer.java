@@ -54,6 +54,7 @@ public class Customer extends Person{
      *
      * @return a String with the object's data formatted for persistence.
      */
+    @Override
     public String toText() {
         return getiD() + "|" + getName() + "|" + eMail + "|" + getContactNumber();
     }
