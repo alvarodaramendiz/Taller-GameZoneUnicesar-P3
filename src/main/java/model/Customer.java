@@ -17,7 +17,7 @@ public class Customer extends Person{
     }
     
     /**
-    * Creates a new Seller with the information of Person and the specific data of Seller
+    * Creates a new Customer with the information of Person and the specific data of Customer
     * 
     * @param name the name of each customer
     * @param iD the identification number of each customer
