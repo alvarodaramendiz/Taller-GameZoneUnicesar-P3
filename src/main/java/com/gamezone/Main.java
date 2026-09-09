@@ -2,7 +2,7 @@ package com.gamezone;
 
 import com.gamezone.persistence.SalePersistence;
 import com.gamezone.service.SaleService;
-import com.gamezone.ui.UserInterface;
+import com.gamezone.ui.MainFrame;
 import com.gamezone.persistence.CustomerDAO;
 import com.gamezone.persistence.SellerDAO;
 // import com.gamezone.persistence.ProductDAO;
@@ -28,7 +28,7 @@ public class Main {
 //
     
     public static void main(String[] args) {
-        UserInterface ui = new UserInterface();
+        MainFrame ui = new MainFrame();
         ui.setVisible(true);
     }
 }
