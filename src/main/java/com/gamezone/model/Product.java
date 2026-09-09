@@ -74,4 +74,17 @@ public abstract class Product {
      * @return a text description of the product
      */
     public abstract String getDescription();
+    
+    
+     /**
+     * Converts the common attributes of the product into a text line,
+     * using "|" as separator. Subclasses should call this method with
+     * super.toText() and append their own specific attributes.
+     *
+     * @return a text representation of the product's common attributes
+     */
+    
+    public String toText() {
+        return productId + "|" + title + "|" + price + "|" + stock;
+    }
 }

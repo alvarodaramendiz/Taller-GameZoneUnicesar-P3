@@ -17,8 +17,7 @@ import java.util.ArrayList;
 
 public class SellerService {
 
-    private SellerDAO sellerDAO;
-
+    private SellerDAO sellerDAO = new SellerDAO();
     /**
      * Validates the information provided for a seller.
      *

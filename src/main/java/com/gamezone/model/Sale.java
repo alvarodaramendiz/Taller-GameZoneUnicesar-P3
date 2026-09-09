@@ -9,15 +9,15 @@ import java.util.ArrayList;
  */
 public final class Sale {
     
-    public class amountOf_product { // Clase que agrupa unidades y producto en una misma estructura
+    public class AmountOfProduct { // Clase que agrupa unidades y producto en una misma estructura
         
         private Product soldProduct; // Producto vendido
         private int productAmount; // Unidades del producto vendido
 
-        public amountOf_product() {
+        public AmountOfProduct() {
         }
 
-        public amountOf_product(Product soldProduct, int productAmount) {
+        public AmountOfProduct(Product soldProduct, int productAmount) {
             this.soldProduct = soldProduct;
             this.productAmount = productAmount;
         }
@@ -43,14 +43,14 @@ public final class Sale {
     
     private long uId; // Identificador único de transacción
     private LocalDate date; // Guardado de fecha local en formato año - mes - día
-    private ArrayList<amountOf_product> productTrack; // 
+    private ArrayList<AmountOfProduct> productTrack; // 
     private Seller seller; // Vendedor que genera la venta
     private Customer customer; // Consumidor o Cliente que realiza la compra
     private double totalValue; // Valor total monetario de la venta
     
     // Constructores para inicialización parametrizada
     
-    public Sale(long uId, LocalDate date, ArrayList<amountOf_product> productTrack, Seller seller, Customer customer) {
+    public Sale(long uId, LocalDate date, ArrayList<AmountOfProduct> productTrack, Seller seller, Customer customer) {
         this.uId = uId;
         this.date = date;
         this.productTrack = productTrack;
@@ -77,11 +77,11 @@ public final class Sale {
         this.date = date;
     }
 
-    public ArrayList<amountOf_product> getProductTrack() {
+    public ArrayList<AmountOfProduct> getProductTrack() {
         return productTrack;
     }
 
-    public void setProductTrack(ArrayList<amountOf_product> productTrack) {
+    public void setProductTrack(ArrayList<AmountOfProduct> productTrack) {
         this.productTrack = productTrack;
     }
 
@@ -106,7 +106,7 @@ public final class Sale {
     
     public double saleTotalValue() {
         double resultValue = 0;
-        for (amountOf_product p: productTrack) {
+        for (AmountOfProduct p: productTrack) {
             double price;
             double amount;
             amount = p.getProductAmount();
@@ -127,7 +127,7 @@ public final class Sale {
             saleReceipt.append("CLIENTE        :   ").append(customer);
             saleReceipt.append("VENDEDOR       :   ").append(seller);
             saleReceipt.append("================ PRODUCTOS ADQUIRIDOS =================");
-        for (amountOf_product e: productTrack) {
+        for (AmountOfProduct e: productTrack) {
             index++;
             saleReceipt.append("PRODUCTO  #").append(index).append("  : ").append(e.getSoldProduct());
             saleReceipt.append("CANTIDAD       : ").append(e.getProductAmount());

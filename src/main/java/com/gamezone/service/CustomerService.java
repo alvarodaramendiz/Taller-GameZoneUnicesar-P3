@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class CustomerService {
 
-    private CustomerDAO customerDAO;
+    private CustomerDAO customerDAO = new CustomerDAO();
 
     /**
      * * Validates the information provided for a customer. 

@@ -1,5 +1,13 @@
 package com.gamezone.ui;
 
+import com.gamezone.ui.SaleManagement;
+import com.gamezone.ui.PersonManagement;
+import com.gamezone.ui.ProductManagement;
+import java.awt.CardLayout;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 /**
  *  Clase de Interfaz Gráfica para los usuarios. En esta clase se implementará el sistema CRUD
  * @author ALVARO
@@ -7,12 +15,33 @@ package com.gamezone.ui;
 public class UserInterface extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(UserInterface.class.getName());
+    private CardLayout controlLayout;
 
     /**
      * Creates new form UserInterface
      */
+    
     public UserInterface() {
         initComponents();
+        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        controlLayout = new CardLayout();
+        jPanel1.setLayout(controlLayout);
+        
+        ProductManagement prdManage = new ProductManagement(jPanel1, controlLayout);
+        PersonManagement prsnManage = new PersonManagement(jPanel1, controlLayout);
+        SaleManagement slManage = new SaleManagement(jPanel1, controlLayout);
+        
+        jPanel1.add(jPanel2, "UserInterface");
+        
+        jPanel1.add(prdManage, "ProductManagement");
+        jPanel1.add(prsnManage, "PersonManagement");
+        jPanel1.add(slManage, "SaleManagement");
+        
+        jPanel1.add(jPanel2, "UserInterface");
+        
+        this.setContentPane(jPanel1);
+        controlLayout.show(jPanel1, "UserInterface");
     }
 
     /**
@@ -24,21 +53,131 @@ public class UserInterface extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        bttnExit = new javax.swing.JButton();
+        bttnSales = new javax.swing.JButton();
+        bttnPeople = new javax.swing.JButton();
+        bttnProduct = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Menú de Gestión GameZone Unicesar");
+        setBackground(new java.awt.Color(100, 162, 255));
+        setPreferredSize(new java.awt.Dimension(960, 576));
+        setResizable(false);
+
+        jPanel1.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "GameZone Menú de Gestiones", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+
+        jPanel2.setBackground(new java.awt.Color(54, 54, 54));
+
+        bttnExit.setBackground(new java.awt.Color(255, 102, 102));
+        bttnExit.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        bttnExit.setForeground(new java.awt.Color(255, 255, 255));
+        bttnExit.setText("Salir");
+        bttnExit.addActionListener(this::bttnExitActionPerformed);
+
+        bttnSales.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        bttnSales.setText("Gestión de Ventas");
+        bttnSales.addActionListener(this::bttnSalesActionPerformed);
+
+        bttnPeople.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        bttnPeople.setText("Gestión de Personas");
+        bttnPeople.addActionListener(this::bttnPeopleActionPerformed);
+
+        bttnProduct.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        bttnProduct.setText("Gestión de Productos");
+        bttnProduct.addActionListener(this::bttnProductActionPerformed);
+
+        jLabel1.setFont(new java.awt.Font("Century Schoolbook", 1, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("GameZone: Sistema de Gestión");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(263, 263, 263)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(bttnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bttnSales, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bttnPeople, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bttnProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(182, 182, 182)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 586, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(182, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(91, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53)
+                .addComponent(bttnProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(bttnPeople, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(bttnSales, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(bttnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(74, 74, 74))
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        getAccessibleContext().setAccessibleName("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void bttnProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnProductActionPerformed
+
+        CardLayout cl = (CardLayout) jPanel1.getLayout();
+        cl.show(jPanel1, "ProductManagement");
+        
+    }//GEN-LAST:event_bttnProductActionPerformed
+
+    private void bttnPeopleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnPeopleActionPerformed
+
+        CardLayout cl = (CardLayout) jPanel1.getLayout();
+        cl.show(jPanel1, "PersonManagement");
+    }//GEN-LAST:event_bttnPeopleActionPerformed
+
+    private void bttnSalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnSalesActionPerformed
+
+        CardLayout cl = (CardLayout) jPanel1.getLayout();
+        cl.show(jPanel1, "SaleManagement");
+    }//GEN-LAST:event_bttnSalesActionPerformed
+
+    private void bttnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnExitActionPerformed
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_bttnExitActionPerformed
 
     /**
      * @param args the command line arguments
@@ -66,5 +205,12 @@ public class UserInterface extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bttnExit;
+    private javax.swing.JButton bttnPeople;
+    private javax.swing.JButton bttnProduct;
+    private javax.swing.JButton bttnSales;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
 }
