@@ -66,4 +66,15 @@ public class Console extends Product {
     public String getDescription() {
         return getTitle() + " - Brand: " + brand + " (Model: " + model + ") - Generation: " + generation;
     }
+    /**
+     * Converts this console into a text line for persistence, including
+     * the common product attributes plus brand, model, and generation.
+     *
+     * @return a text representation of the console
+     */
+    @Override
+    public String toText() {
+        return "CONSOLE|" + super.toText() + "|" + brand + "|" + model + "|" + generation;
+    }
+    
 }
