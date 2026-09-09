@@ -59,6 +59,8 @@ public class MainFrame extends JFrame {
 
         centerPanel.add(new JLabel("Bienvenido a GameZone Unicesar", SwingConstants.CENTER), "home");
         centerPanel.add(new ProductPanel(), "products");
+        centerPanel.add(new SalePanel(), "sales");
+        centerPanel.add(new PersonPanel(), "people");
         // TODO: cuando existan, agregar:
         // centerPanel.add(new PersonPanel(), "people");
         // centerPanel.add(new SalePanel(), "sales");
