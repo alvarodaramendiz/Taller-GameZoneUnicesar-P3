@@ -1,5 +1,13 @@
 package com.gamezone.ui;
 
+import com.gamezone.ui.SaleManagement;
+import com.gamezone.ui.PersonManagement;
+import com.gamezone.ui.ProductManagement;
+import java.awt.CardLayout;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 /**
  *  Clase de Interfaz Gráfica para los usuarios. En esta clase se implementará el sistema CRUD
  * @author ALVARO
@@ -7,12 +15,33 @@ package com.gamezone.ui;
 public class UserInterface extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(UserInterface.class.getName());
+    private CardLayout controlLayout;
 
     /**
      * Creates new form UserInterface
      */
+    
     public UserInterface() {
         initComponents();
+        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        controlLayout = new CardLayout();
+        jPanel1.setLayout(controlLayout);
+        
+        ProductManagement prdManage = new ProductManagement(jPanel1, controlLayout);
+        PersonManagement prsnManage = new PersonManagement(jPanel1, controlLayout);
+        SaleManagement slManage = new SaleManagement(jPanel1, controlLayout);
+        
+        jPanel1.add(jPanel2, "UserInterface");
+        
+        jPanel1.add(prdManage, "ProductManagement");
+        jPanel1.add(prsnManage, "PersonManagement");
+        jPanel1.add(slManage, "SaleManagement");
+        
+        jPanel1.add(jPanel2, "UserInterface");
+        
+        this.setContentPane(jPanel1);
+        controlLayout.show(jPanel1, "UserInterface");
     }
 
     /**
@@ -38,8 +67,10 @@ public class UserInterface extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(960, 576));
         setResizable(false);
 
-        jPanel1.setBackground(new java.awt.Color(51, 153, 255));
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Menú Principal", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel1.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "GameZone Menú de Gestiones", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+
+        jPanel2.setBackground(new java.awt.Color(54, 54, 54));
 
         bttnExit.setBackground(new java.awt.Color(255, 102, 102));
         bttnExit.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -60,6 +91,7 @@ public class UserInterface extends javax.swing.JFrame {
         bttnProduct.addActionListener(this::bttnProductActionPerformed);
 
         jLabel1.setFont(new java.awt.Font("Century Schoolbook", 1, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("GameZone: Sistema de Gestión");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -83,7 +115,7 @@ public class UserInterface extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(79, Short.MAX_VALUE)
+                .addContainerGap(91, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(53, 53, 53)
                 .addComponent(bttnProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -104,10 +136,7 @@ public class UserInterface extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -127,15 +156,22 @@ public class UserInterface extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bttnProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnProductActionPerformed
-        // TODO add your handling code here:
+
+        CardLayout cl = (CardLayout) jPanel1.getLayout();
+        cl.show(jPanel1, "ProductManagement");
+        
     }//GEN-LAST:event_bttnProductActionPerformed
 
     private void bttnPeopleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnPeopleActionPerformed
-        // TODO add your handling code here:
+
+        CardLayout cl = (CardLayout) jPanel1.getLayout();
+        cl.show(jPanel1, "PersonManagement");
     }//GEN-LAST:event_bttnPeopleActionPerformed
 
     private void bttnSalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnSalesActionPerformed
-        // TODO add your handling code here:
+
+        CardLayout cl = (CardLayout) jPanel1.getLayout();
+        cl.show(jPanel1, "SaleManagement");
     }//GEN-LAST:event_bttnSalesActionPerformed
 
     private void bttnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnExitActionPerformed
