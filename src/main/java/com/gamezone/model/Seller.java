@@ -1,7 +1,5 @@
 package com.gamezone.model;
 
-//import java.util.ArrayList;
-
 /**
  * Concret Class for every Seller in GameZone Unicesar
  * It Extends the Person class and contains specific information
@@ -13,8 +11,6 @@ public class Seller extends Person{
 
     private long employeeCode;
     private Shift shift;
-//  private ArrayList<Sale> sales;
-//    Se desbloqueara el comentario en el momento que la clase Sale se desarrolle
 
     
     public Seller() {
