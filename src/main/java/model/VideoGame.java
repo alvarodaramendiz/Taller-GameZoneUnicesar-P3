@@ -67,4 +67,14 @@ public class VideoGame extends Product {
     public String getDescription() {
         return getTitle() + " for " + platform + " (" + genre + ") - Classification: " + ageRating;
     }
+     /**
+     * Converts this video game into a text line for persistence, including
+     * the common product attributes plus platform, genre, and age rating.
+     *
+     * @return a text representation of the video game
+     */
+    @Override
+    public String toText() {
+        return "VIDEOGAME|" + super.toText() + "|" + platform + "|" + genre + "|" + ageRating;
+    }
 }
