@@ -54,10 +54,6 @@ public class CustomerService {
             throw new IllegalArgumentException("Contact number cannot be negative");
         }
 
-        if (searchCustomer(iD) != null) {
-            throw new IllegalArgumentException("A customer with this ID already exists");
-        }
-
     }
 
     /**
