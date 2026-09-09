@@ -1,4 +1,4 @@
-package model;
+package com.gamezone.model;
 
 /**
  * Represents a video game in the GameZone Unicesar store.
