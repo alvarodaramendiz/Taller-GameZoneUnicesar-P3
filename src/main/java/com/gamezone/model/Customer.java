@@ -1,7 +1,5 @@
 package com.gamezone.model;
 
-//import java.util.ArrayList;
-
 /**
  * Concret class for every seller in GameZone Unicesar
  * It extends from Person and contains specific customer information
@@ -11,7 +9,6 @@ package com.gamezone.model;
 
 public class Customer extends Person{
     private String eMail;
-    //private ArrayList<Purchase> purchase;
 
     public Customer() {
     }
