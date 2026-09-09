@@ -9,13 +9,14 @@ import java.util.ArrayList;
 import com.gamezone.model.Customer;
 import utilities.PlainArchives;
 
- /**
-  * Data Access Object (DAO) responsible for the persistence of Customer objects.
-  * It provides methods to search, save, and list customers using the project's
-  * persistence storage.
-  *
-  * @author EstefaniaMarquez
-  */
+/**
+ * Data Access Object (DAO) responsible for the persistence of Customer objects.
+ * It provides methods to search, save a single customer,
+ * all of the customers, update, delete and list customers using the project's
+ * persistence storage.
+ *
+ * @author EstefaniaMarquez
+ */
 public class CustomerDAO {
 
     /**
@@ -35,19 +36,38 @@ public class CustomerDAO {
     }
 
     /**
+     * Saves all Customer records by overwriting the persistence file with the
+     * provided list of customers.
+     *
+     * @param customers the list of Customer records to be saved.
+     */
+    private void saveCustomers(ArrayList<Customer> customers) {
+        try (BufferedWriter bw = new BufferedWriter(
+                new FileWriter(PlainArchives.CUSTOMERS))) {
+            for (Customer currentC : customers) {
+                bw.write(currentC.toText());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error: Failed to save the customers records.");
+        }
+    }
+
+    /**
      * Retrieves all Customer records stored in the persistence file. Each
      * record is read and converted into a Customer object.
      *
      * @return an ArrayList containing all stored Customer records.
      */
-    
     public ArrayList<Customer> listCustomers() {
         ArrayList<Customer> customers = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(
                 new FileReader(PlainArchives.CUSTOMERS))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
                 String[] infoCustomer = line.split("\\|");
                 long contactNumber, iD;
                 contactNumber = Long.parseLong(infoCustomer[3]);
@@ -58,6 +78,44 @@ public class CustomerDAO {
             System.out.println("Error: Failed to list the customers record.");
         }
         return customers;
+    }
+
+    /**
+     * Updates an existing Customer record by modifying its information and
+     * saving the updated list of customers to the persistence file.
+     *
+     * @param customer the Customer record containing the updated information.
+     */
+    public void updateCustomer(Customer customer) {
+        ArrayList<Customer> customers = listCustomers();
+        for (Customer currentC : customers) {
+            if (currentC.getiD() == customer.getiD()) {
+                currentC.seteMail(customer.geteMail());
+                currentC.setContactNumber(customer.getContactNumber());
+                currentC.setName(customer.getName());
+                break;
+            }
+        }
+        saveCustomers(customers);
+    }
+
+    /**
+     * Deletes a Customer record from the persistence file using its
+     * identification number.
+     *
+     * @param iD the identification number of the Customer to be deleted.
+     */
+    public void deleteCustomer(long iD) {
+        ArrayList<Customer> customers = listCustomers();
+        Customer toDelete = null;
+        for (Customer currentC : customers) {
+            if (currentC.getiD() == iD) {
+                toDelete = currentC;
+                break;
+            }
+        }
+        customers.remove(toDelete);
+        saveCustomers(customers);
     }
 
     /**
@@ -76,5 +134,5 @@ public class CustomerDAO {
         }
         return null;
     }
-    
+
 }
