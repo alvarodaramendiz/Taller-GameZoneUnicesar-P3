@@ -2,7 +2,7 @@ package com.gamezone.service;
 
 import com.gamezone.model.Seller;
 import com.gamezone.model.Shift;
-import com.gamezone.persistence.SellerDAO;
+import com.gamezone.persistence.SellerPersistence;
 import java.util.ArrayList;
 
 /**
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class SellerService {
 
-    private SellerDAO sellerDAO = new SellerDAO();
+    private SellerPersistence sellerDAO = new SellerPersistence();
     /**
      * Validates the information provided for a seller.
      *
