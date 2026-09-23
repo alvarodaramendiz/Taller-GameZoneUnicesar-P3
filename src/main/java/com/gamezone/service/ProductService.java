@@ -3,7 +3,7 @@ package com.gamezone.service;
 import com.gamezone.model.Product;
 import com.gamezone.model.VideoGame;
 import com.gamezone.model.Console;
-import com.gamezone.persistence.ProductDAO;
+import com.gamezone.persistence.ProductPersistence;
 import java.util.List;
 
 /**
@@ -14,10 +14,10 @@ import java.util.List;
  */
 public class ProductService {
 
-    private ProductDAO productDAO;
+    private ProductPersistence productDAO;
 
     public ProductService() {
-        this.productDAO = new ProductDAO();
+        this.productDAO = new ProductPersistence();
     }
 
     /**
