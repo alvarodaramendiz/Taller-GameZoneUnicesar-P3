@@ -135,4 +135,15 @@ public final class Sale {
             saleReceipt.append("VALOR TOTAL    : ").append(totalValue);
         return saleReceipt.toString();
     }
+    /**
+    * Checks if the sale is eligible for a return within 30 calendar days.
+    *
+    * @return true if the sale can be returned, false otherwise
+    */
+    public boolean canBeReturned() {
+    LocalDate today = LocalDate.now();
+    long days = java.time.temporal.ChronoUnit.DAYS.between(date, today);
+
+    return days >= 0 && days <= 30;
+}
 }
