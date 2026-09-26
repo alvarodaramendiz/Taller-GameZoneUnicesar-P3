@@ -20,6 +20,7 @@ public class MainFrame extends JFrame {
     private JButton btnProducts;
     private JButton btnPeople;
     private JButton btnSales;
+    private JButton btnReturns;
     private JButton btnExit;
 
     public MainFrame() {
@@ -45,11 +46,13 @@ public class MainFrame extends JFrame {
         btnPeople = createMenuButton("Personas");
         btnSales = createMenuButton("Ventas");
         btnExit = createMenuButton("Salir");
+        btnReturns = createMenuButton("Devoluciones");
 
         sidebar.add(btnHome);
         sidebar.add(btnProducts);
         sidebar.add(btnPeople);
         sidebar.add(btnSales);
+        sidebar.add(btnReturns);
         sidebar.add(new JLabel());
         sidebar.add(btnExit);
 
@@ -59,16 +62,15 @@ public class MainFrame extends JFrame {
 
         centerPanel.add(new JLabel("Bienvenido a GameZone Unicesar", SwingConstants.CENTER), "home");
         centerPanel.add(new ProductPanel(), "products");
-        centerPanel.add(new SalePanel(), "sales");
         centerPanel.add(new PersonPanel(), "people");
-        // TODO: cuando existan, agregar:
-        // centerPanel.add(new PersonPanel(), "people");
-        // centerPanel.add(new SalePanel(), "sales");
+        centerPanel.add(new SalePanel(), "sales");
+        centerPanel.add(new ReturnPanel(), "returns");
 
         btnHome.addActionListener(e -> cardLayout.show(centerPanel, "home"));
         btnProducts.addActionListener(e -> cardLayout.show(centerPanel, "products"));
         btnPeople.addActionListener(e -> cardLayout.show(centerPanel, "people"));
         btnSales.addActionListener(e -> cardLayout.show(centerPanel, "sales"));
+        btnReturns.addActionListener(e -> cardLayout.show(centerPanel, "returns"));
         btnExit.addActionListener(e -> System.exit(0));
 
         add(sidebar, BorderLayout.WEST);
