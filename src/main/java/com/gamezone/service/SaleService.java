@@ -22,6 +22,7 @@ public class SaleService {
     private final ProductService productService;
     private final SellerService sellerService;
     private final CustomerService customerService;
+    private final WarrantyService warrantyService;
     private final List<Sale> sales;
 
     /**
@@ -32,14 +33,16 @@ public class SaleService {
      * @param productService  the service used to resolve and update products
      * @param sellerService   the service used to resolve sellers
      * @param customerService the service used to resolve customers
+     * @param warrantyService the service used to resolve warranties
      */
     public SaleService(SalePersistence repository, ProductService productService,
-            SellerService sellerService, CustomerService customerService) {
+            SellerService sellerService, CustomerService customerService, WarrantyService warrantyService) {
         this.repository = repository;
         this.productService = productService;
         this.sellerService = sellerService;
         this.customerService = customerService;
         this.sales = new ArrayList<>(repository.loadAll());
+        this.warrantyService = warrantyService;
     }
 
     /**
@@ -61,7 +64,7 @@ public class SaleService {
      *                                  customer, seller, or a product cannot
      *                                  be found, or if stock is insufficient
      */
-    public Sale registerSale(long customerId, long employeeCode, Map<String, Integer> productQuantities) {
+    public Sale registerSale(long customerId, long employeeCode, Map<String, Integer> productQuantities, List<String> productIdsWithExtendedWarranty) {
         if (productQuantities == null || productQuantities.isEmpty()) {
             throw new IllegalArgumentException("La venta debe contener al menos un producto.");
         }
@@ -90,14 +93,19 @@ public class SaleService {
 
         long uId = System.currentTimeMillis();
         Sale sale = new Sale(uId, LocalDate.now(), new ArrayList<>(), seller, customer);
-        sale.setProductTrack(buildProductTrack(sale, productQuantities));
-
-        // NOTA: a diferencia del SaleService de referencia, aquí no se
-        // descuenta el stock todavía. ProductDAO solo sabe agregar productos
-        // (saveProduct los añade al final del archivo) y no tiene un método
-        // para actualizar uno existente. En cuanto ProductDAO/ProductService
-        // tengan esa operación, aquí es donde se llamaría.
-
+        ArrayList<Sale.AmountOfProduct> pA = buildProductTrack(sale, productQuantities);
+        sale.setProductTrack(pA);
+        
+//        WarrantyService.assignBasicWarranty(productId, sale, sale.getDate());
+//        
+//        if (productIdsWithExtendedWarranty != null || !productIdsWithExtendedWarranty.isEmpty()) {
+//            for (String id: productIdsWithExtendedWarranty) {
+//                WarrantyService.assignExtendedWarranty(productId, sale, sale.getDate());
+//            }
+//        }
+        
+        
+        
         sales.add(sale);
         repository.saveAll(sales);
 
