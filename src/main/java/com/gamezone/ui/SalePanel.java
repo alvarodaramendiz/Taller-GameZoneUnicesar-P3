@@ -7,6 +7,7 @@ import com.gamezone.service.CustomerService;
 import com.gamezone.service.ProductService;
 import com.gamezone.service.SaleService;
 import com.gamezone.service.SellerService;
+import com.gamezone.service.WarrantyService;
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,8 +27,9 @@ public class SalePanel extends JPanel {
     private CustomerService customerService = new CustomerService();
     private SalePersistence salePersistence =
             new SalePersistence(productService, sellerService, customerService);
+    private final WarrantyService warrantyService = new WarrantyService();
     private SaleService saleService =
-            new SaleService(salePersistence, productService, sellerService, customerService);
+            new SaleService(salePersistence, productService, sellerService, customerService, warrantyService);
 
     private JTextField txtCustomerId, txtEmployeeCode;
     private JComboBox<String> comboProduct;
@@ -38,6 +40,7 @@ public class SalePanel extends JPanel {
     private JTable cartTable;
     private DefaultTableModel salesTableModel;
     private JTable salesTable;
+    
 
     public SalePanel() {
         setLayout(new BorderLayout(10, 10));
@@ -45,6 +48,7 @@ public class SalePanel extends JPanel {
 
         add(createFormPanel(), BorderLayout.NORTH);
         add(createSalesTablePanel(), BorderLayout.CENTER);
+        
 
         refreshSalesTable();
     }
@@ -143,9 +147,15 @@ public class SalePanel extends JPanel {
         try {
             long customerId = Long.parseLong(txtCustomerId.getText());
             long employeeCode = Long.parseLong(txtEmployeeCode.getText());
-
-            Sale sale = saleService.registerSale(customerId, employeeCode, cart);
-
+            
+            int confirm = JOptionPane.showConfirmDialog(null, "¿Le gustaría extender la garantía de los productos?", "Confirmar garantías", JOptionPane.YES_NO_OPTION);
+            
+            if (confirm == JOptionPane.YES_OPTION) {
+                
+                
+            }
+            
+            Sale sale = saleService.registerSale(customerId, employeeCode, cart, null);
             JOptionPane.showMessageDialog(this, "Venta registrada. Total: " + sale.saleTotalValue());
             cart.clear();
             refreshCartTable();
