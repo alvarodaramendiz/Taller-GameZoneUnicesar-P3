@@ -5,9 +5,7 @@ package com.gamezone.ui;
 import com.gamezone.model.Customer;
 import com.gamezone.model.Seller;
 import com.gamezone.model.Shift;
-import com.gamezone.service.CustomerService;
-import com.gamezone.service.SellerService;
-import com.gamezone.service.ProductService;
+import com.gamezone.service.PromotionService;
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -20,11 +18,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class PromotionPanel extends JPanel {
 
-    private CustomerService customerService = new CustomerService();
-    private SellerService sellerService = new SellerService();
-
-    private JTextField txtReason, txtName, txtId, txtValue, txtMonth, txtYear;
-    private JComboBox<String> comboPromotions;
+    private JTextField txtDateStart, txtName, txtId, txtDateEnd, txtPercentage;
+    private JComboBox<String> comboPromotions, comboCategory;
     private JTable registerPromotionsTable, ViewPromotionsTable, availablePromotionsTable;
     private DefaultTableModel registerPromotionsTableModel, ViewPromotionsTableModel, availablePromotionsTableModel;
 
@@ -43,46 +38,79 @@ public class PromotionPanel extends JPanel {
     private JPanel registerPromotionsTab() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
 
-        JPanel form = new JPanel(new GridLayout(2, 4, 8, 8));
-        JPanel formId = new JPanel(new GridLayout(2, 4, 8, 8));
-        form.setBorder(BorderFactory.createTitledBorder("Registro de Promociones"));
-        formId.setBorder(BorderFactory.createTitledBorder("Buscar Transacción"));
+        JPanel registerPane = new JPanel(new GridLayout(2, 4));
+        JPanel inputPane = new JPanel(new GridLayout(2, 4, 8, 8));
+        JPanel comboPane = new JPanel(new GridLayout(2, 4, 8, 8));
         
-        txtReason = new JTextField();
-        comboPromotions = new JComboBox<>();
+        JPanel idPane = new JPanel(new GridLayout(2, 4, 8, 8));
+        JPanel datePane = new JPanel(new GridLayout(2, 4, 8, 8));
+        
+        JLabel category;
+        registerPane.setBorder(BorderFactory.createTitledBorder("Registro de Promociones"));
+        inputPane.setBorder(BorderFactory.createTitledBorder("Ingresar Datos"));
+        comboPane.setBorder(BorderFactory.createTitledBorder("Selección de Promociones"));
+        
+        txtDateStart = new JTextField();
+        comboPromotions = new JComboBox<>(new String[]{"Porcentaje","Categoría","Volumen"});
+        comboCategory = new JComboBox<>(new String[]{"Consola","Videojuego"});
         txtId = new JTextField();
-        txtValue = new JTextField();
+        txtDateEnd = new JTextField();
+        category = new JLabel("Categoría:");
         
-        JButton btnSearchId = new JButton("Buscar transacción");
-        btnSearchId.addActionListener(e -> searchId());
-        
-        formId.add(new JLabel("Número de Transacción:"));
-        formId.add(txtId);
-        formId.add(btnSearchId, BorderLayout.CENTER);
-        
-        form.add(new JLabel("Productos:"));
-        form.add(comboPromotions);
-        form.add(new JLabel("Motivo de Devolución:"));
-        form.add(txtReason);
-        form.add(new JLabel("Reembolso:"));
-        form.add(txtValue);
+        category.setVisible(false);
+        comboCategory.setVisible(false);
 
-        JButton btnRegister = new JButton("Registrar devolución");
-        btnRegister.addActionListener(e -> registerReturn());
-        form.add(btnRegister, BorderLayout.CENTER);
+        comboCategory.addActionListener(e ->{// Desarrollar al completar persistencia, modelo y servicio
+        });
+        
+        comboPromotions.addActionListener(e ->{
+            
+            String option = comboPromotions.getSelectedItem().toString();
+            
+            if (option.equals("Categoría")) {
+                category.setVisible(true);
+                comboCategory.setVisible(true);
+            } else {
+                category.setVisible(false);
+                comboCategory.setVisible(false);
+            }
+            
+        });
+        
+        idPane.add(new JLabel("ID de la Promoción:"));
+        idPane.add(txtId);
+        
+        comboPane.add(new JLabel("Promociones:"));
+        comboPane.add(comboPromotions);
+        
+        comboPane.add(category);
+        comboPane.add(comboCategory);
+        
+        datePane.add(new JLabel("Fecha de inicio:"));
+        datePane.add(txtDateStart, BorderLayout.NORTH);
+        datePane.add(new JLabel("Vencimiento:"));
+        datePane.add(txtDateEnd, BorderLayout.SOUTH);
+        
+        inputPane.add(idPane, BorderLayout.WEST);
+        inputPane.add(datePane, BorderLayout.EAST);
 
-        JPanel formWrapper = new JPanel(new BorderLayout());
-        formWrapper.add(formId, BorderLayout.NORTH);
-        formWrapper.add(form, BorderLayout.SOUTH);
+        JButton btnRegister = new JButton("Registrar promoción");
+        btnRegister.addActionListener(e -> registerPromotion());
+        registerPane.add(btnRegister, BorderLayout.NORTH);
+
+        JPanel paneWrapper = new JPanel(new BorderLayout());
+        paneWrapper.add(inputPane, BorderLayout.NORTH);
+        paneWrapper.add(comboPane, BorderLayout.SOUTH);
 
         registerPromotionsTableModel = new DefaultTableModel(
-                new String[]{"Número de Transacción", "Productos", "Motivo de Devolución", "Reembolso"}, 0);
+                new String[]{"ID de Promoción", "Promoción", "Tipo", "Fecha inicio", "Vencimiento"}, 0);
         registerPromotionsTable = new JTable(registerPromotionsTableModel);
 
-        panel.add(formWrapper, BorderLayout.NORTH);
+        panel.add(paneWrapper, BorderLayout.NORTH);
+        panel.add(registerPane, BorderLayout.SOUTH);
         panel.add(new JScrollPane(registerPromotionsTable), BorderLayout.CENTER);
 
-        refreshReturnsTable();
+        refreshPromotionsTable();
         return panel;
     }
 
@@ -90,7 +118,7 @@ public class PromotionPanel extends JPanel {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
 
         ViewPromotionsTableModel = new DefaultTableModel(
-                new String[]{"Número de Transacción", "Productos", "Motivo de Devolución", "Reembolso"}, 0);
+                new String[]{"ID de Promoción", "Promoción", "Tipo", "Fecha inicio", "Vencimiento"}, 0);
         ViewPromotionsTable = new JTable(ViewPromotionsTableModel);
 
         JButton btnRefresh = new JButton("Actualizar lista");
@@ -105,56 +133,35 @@ public class PromotionPanel extends JPanel {
     
     private JPanel availablePromotionsTab() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
-        JPanel form = new JPanel(new GridLayout(2, 4, 8, 8));
 
-        form.setBorder(BorderFactory.createTitledBorder("Consulta de Balance Mensual"));
+        JButton btnUpdate = new JButton("Actualizar lista vigentes");
+        btnUpdate.addActionListener(e -> refreshAvailablesTable());
 
-        txtMonth = new JTextField();
-        txtYear = new JTextField();
-
-        form.add(new JLabel("Mes:"));
-        form.add(txtMonth);
-        form.add(new JLabel("Año:"));
-        form.add(txtYear);
-
-        JButton btnSearch = new JButton("Buscar");
-        btnSearch.addActionListener(e -> refreshReportTable());
-        JButton btnShow = new JButton("Mostrar todos");
-        btnSearch.addActionListener(e -> showReportTable());
-
-        JPanel formWrapper = new JPanel(new BorderLayout());
-        formWrapper.add(form, BorderLayout.CENTER);
-        formWrapper.add(btnSearch, BorderLayout.SOUTH);
+        JPanel updatePane = new JPanel(new BorderLayout());
+        updatePane.add(btnUpdate, BorderLayout.SOUTH);
 
         availablePromotionsTableModel = new DefaultTableModel(
-                new String[]{"Mes", "Año", "Ganancias", "Costo Devoluciones", "Balance Neto"}, 0);
+                new String[]{"ID de Promoción", "Promoción", "Tipo", "Fecha inicio", "Vencimiento"}, 0);
         availablePromotionsTable = new JTable(availablePromotionsTableModel);
 
-        panel.add(formWrapper, BorderLayout.NORTH);
+        panel.add(updatePane, BorderLayout.NORTH);
         panel.add(new JScrollPane(availablePromotionsTable), BorderLayout.CENTER);
         
-        refreshReportTable();
+        refreshAvailablesTable();
         return panel;
     }
     
-    private void searchReport() {
-        // implementar cuando se complete ReturnService y ReturnPersistence
-    }
-    
-    private void searchId() {
-        // implementar cuando se complete ReturnService y ReturnPersistence
-    }
 
-    private void registerReturn() {
+    private void registerPromotion() {
 //        try {
-//            String email = txtReason.getText();
+//            String email = txtDateStart.getText();
 //            String name = txtName.getText();
 //            long id = Long.parseLong(txtId.getText());
-//            long contact = Long.parseLong(txtValue.getText());
+//            long contact = Long.parseLong(txtDateEnd.getText());
 //
 //            customerService.registerCustomer(email, name, id, contact);
 //            JOptionPane.showMessageDialog(this, "Cliente registrado con éxito.");
-//            refreshReturnsTable();
+//            refreshPromotionsTable();
 //        } catch (NumberFormatException e) {
 //            JOptionPane.showMessageDialog(this, "ID y contacto deben ser números válidos.");
 //        } catch (IllegalArgumentException e) {
@@ -162,7 +169,7 @@ public class PromotionPanel extends JPanel {
 //        }
     }
 
-    private void refreshReturnsTable() {
+    private void refreshPromotionsTable() {
 //        registerPromotionsTableModel.setRowCount(0);
 //        ArrayList<Customer> customers = customerService.listCustomers();
 //        for (Customer c : customers) {
@@ -181,13 +188,8 @@ public class PromotionPanel extends JPanel {
 //            });
 //        }
     }
-    
-    
-    private void showReportTable() {
-        // Desarrollar cuando se complete ReturnService y RreturnPersistence
-    }
-        
-    private void refreshReportTable() {
+
+    private void refreshAvailablesTable() {
         // Desarrollar cuando se complete ReturnService y RreturnPersistence
     }
 }
