@@ -16,6 +16,9 @@ public class ProductService {
 
     private ProductPersistence productDAO;
 
+    /**
+     * Creates a new ProductService with its own product persistence.
+     */
     public ProductService() {
         this.productDAO = new ProductPersistence();
     }
@@ -75,6 +78,28 @@ public class ProductService {
     }
 
     /**
+     * Updates the stock of a product by the given quantity and saves the
+     * change. A positive quantity adds units and a negative one removes them.
+     *
+     * @param productId the ID of the product to update
+     * @param quantity the number of units to add (positive) or remove (negative)
+     * @throws IllegalArgumentException if the product does not exist or the
+     *         resulting stock would be negative
+     */
+    public void updateStock(String productId, int quantity) {
+        Product product = productDAO.searchProduct(productId);
+        if (product == null) {
+            throw new IllegalArgumentException("Producto no encontrado: " + productId);
+        }
+        int newStock = product.getStock() + quantity;
+        if (newStock < 0) {
+            throw new IllegalArgumentException("Stock insuficiente para el producto: " + product.getTitle());
+        }
+        product.setStock(newStock);
+        productDAO.updateProduct(product);
+    }
+
+    /**
      * Validates the common attributes shared by all products.
      *
      * @param product the product to validate
@@ -107,4 +132,4 @@ public class ProductService {
                 ageRating.equals("E") || ageRating.equals("E10+") ||
                 ageRating.equals("T") || ageRating.equals("M") || ageRating.equals("AO"));
     }
-}
+}
