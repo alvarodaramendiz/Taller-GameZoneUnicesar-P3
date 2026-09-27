@@ -20,6 +20,7 @@ public class MainFrame extends JFrame {
     private JButton btnProducts;
     private JButton btnPeople;
     private JButton btnSales;
+    private JButton btnWarranties;
     private JButton btnExit;
 
     public MainFrame() {
@@ -45,11 +46,13 @@ public class MainFrame extends JFrame {
         btnPeople = createMenuButton("Personas");
         btnSales = createMenuButton("Ventas");
         btnExit = createMenuButton("Salir");
+        btnWarranties = createMenuButton("Garantías");
 
         sidebar.add(btnHome);
         sidebar.add(btnProducts);
         sidebar.add(btnPeople);
         sidebar.add(btnSales);
+        sidebar.add(btnWarranties);
         sidebar.add(new JLabel());
         sidebar.add(btnExit);
 
@@ -64,17 +67,19 @@ public class MainFrame extends JFrame {
         // TODO: cuando existan, agregar:
         // centerPanel.add(new PersonPanel(), "people");
         // centerPanel.add(new SalePanel(), "sales");
+        centerPanel.add(new WarrantyPanel(), "warranties");
 
         btnHome.addActionListener(e -> cardLayout.show(centerPanel, "home"));
         btnProducts.addActionListener(e -> cardLayout.show(centerPanel, "products"));
         btnPeople.addActionListener(e -> cardLayout.show(centerPanel, "people"));
         btnSales.addActionListener(e -> cardLayout.show(centerPanel, "sales"));
+        btnWarranties.addActionListener(e -> cardLayout.show(centerPanel, "warranties"));
         btnExit.addActionListener(e -> System.exit(0));
 
         add(sidebar, BorderLayout.WEST);
         add(centerPanel, BorderLayout.CENTER);
     }
-
+    
     private JButton createMenuButton(String text) {
         JButton button = new JButton(text);
         button.setForeground(Color.WHITE);
