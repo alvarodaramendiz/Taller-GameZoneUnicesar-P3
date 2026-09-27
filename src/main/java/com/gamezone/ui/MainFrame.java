@@ -21,6 +21,7 @@ public class MainFrame extends JFrame {
     private JButton btnPeople;
     private JButton btnSales;
     private JButton btnExit;
+    private JButton btnAccesories;
 
     public MainFrame() {
         setTitle("GameZone Unicesar - Management System");
@@ -45,6 +46,7 @@ public class MainFrame extends JFrame {
         btnPeople = createMenuButton("Personas");
         btnSales = createMenuButton("Ventas");
         btnExit = createMenuButton("Salir");
+        btnAccesories = createMenuButton("Accesorios");
 
         sidebar.add(btnHome);
         sidebar.add(btnProducts);
@@ -52,6 +54,7 @@ public class MainFrame extends JFrame {
         sidebar.add(btnSales);
         sidebar.add(new JLabel());
         sidebar.add(btnExit);
+        sidebar.add(btnAccesories);
 
         // Center panel with CardLayout
         cardLayout = new CardLayout();
@@ -64,11 +67,14 @@ public class MainFrame extends JFrame {
         // TODO: cuando existan, agregar:
         // centerPanel.add(new PersonPanel(), "people");
         // centerPanel.add(new SalePanel(), "sales");
+        centerPanel.add(new AccesoryPanel(), "accesories");
+        
 
         btnHome.addActionListener(e -> cardLayout.show(centerPanel, "home"));
         btnProducts.addActionListener(e -> cardLayout.show(centerPanel, "products"));
         btnPeople.addActionListener(e -> cardLayout.show(centerPanel, "people"));
         btnSales.addActionListener(e -> cardLayout.show(centerPanel, "sales"));
+        btnAccesories.addActionListener(e -> cardLayout.show(centerPanel, "accesories"));
         btnExit.addActionListener(e -> System.exit(0));
 
         add(sidebar, BorderLayout.WEST);
