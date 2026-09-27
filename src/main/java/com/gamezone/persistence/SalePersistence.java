@@ -113,7 +113,7 @@ public class SalePersistence {
             sale.getDate().toString(),
             String.valueOf(sale.getSeller().getEmployeeCode()),
             String.valueOf(sale.getCustomer().getiD()),
-            String.valueOf(sale.saleTotalValue()),
+            String.valueOf(sale.getTotalValue()),
             productTrackToField(sale.getProductTrack()));
     }
 
@@ -154,10 +154,8 @@ public class SalePersistence {
             throw new RuntimeException("Failed to resolve seller or customer for sale " + uId);
         }
 
-        // AmountOfProduct es una clase interna NO estática de Sale, así que
-        // no se puede construir sin una instancia de Sale ya creada. Por eso
-        // la venta se crea primero con la lista vacía, y luego se rellena.
-        Sale sale = new Sale(uId, date, new ArrayList<>(), seller, customer);
+        // AJUSTAR LA VENTA PARA EL SISTEMA DE PROMOCIONES
+        Sale sale = new Sale(uId, date, new ArrayList<>(), seller, customer, "", 0);
         sale.setProductTrack(fieldToProductTrack(sale, productsField));
         return sale;
     }
