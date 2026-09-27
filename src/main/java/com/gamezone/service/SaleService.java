@@ -89,7 +89,10 @@ public class SaleService {
         }
 
         long uId = System.currentTimeMillis();
-        Sale sale = new Sale(uId, LocalDate.now(), new ArrayList<>(), seller, customer);
+        // FALTA EL DESCUENTO
+        // AJUSTAR LA VENTA PARA EL SISTEMA DE PROMOCIONES
+        Sale sale = new Sale(uId, LocalDate.now(), new ArrayList<>(), seller, customer, "", 0);
+        sale.setTotalValue(calculateValue(sale));
         sale.setProductTrack(buildProductTrack(sale, productQuantities));
 
         // NOTA: a diferencia del SaleService de referencia, aquí no se
@@ -103,7 +106,29 @@ public class SaleService {
 
         return sale;
     }
-
+    
+        private double calculateValue(Sale sale) {
+            
+            double resultValue = 0;
+            ArrayList<Sale.AmountOfProduct> productTrack = sale.getProductTrack();
+            for (Sale.AmountOfProduct p: productTrack) {
+                double price;
+                double amount;
+                amount = p.getProductAmount();
+                price = p.getSoldProduct().getPrice();
+                resultValue+=(price*amount);
+            }
+            return resultValue;
+        }
+        
+        private double calculateDiscount(Sale sale) {
+            
+            double resultDiscount = 0;
+            if (sale.getAppliedPromotion() != null || !sale.getAppliedPromotion().isEmpty()) {
+                resultDiscount=resultDiscount*(1-sale.getPromotionDiscount());
+            }
+            return resultDiscount;
+        }
     /**
      * Returns an unmodifiable view of every registered sale.
      *
