@@ -146,7 +146,7 @@ public class SalePanel extends JPanel {
 
             Sale sale = saleService.registerSale(customerId, employeeCode, cart);
 
-            JOptionPane.showMessageDialog(this, "Venta registrada. Total: " + sale.saleTotalValue());
+            JOptionPane.showMessageDialog(this, "Venta registrada. Total: " + sale.getTotalValue());
             cart.clear();
             refreshCartTable();
             refreshSalesTable();
@@ -164,7 +164,7 @@ public class SalePanel extends JPanel {
         for (Sale s : sales) {
             salesTableModel.addRow(new Object[]{
                     s.getuId(), s.getDate(), s.getCustomer().getName(),
-                    s.getSeller().getName(), s.saleTotalValue()
+                    s.getSeller().getName(), s.getTotalValue()
             });
         }
     }
