@@ -3,10 +3,16 @@ package com.gamezone.ui;
 import com.gamezone.model.Customer;
 import com.gamezone.model.Seller;
 import com.gamezone.model.Shift;
+import com.gamezone.service.SaleService;
 import com.gamezone.service.CustomerService;
 import com.gamezone.service.SellerService;
 import com.gamezone.service.ProductService;
 import com.gamezone.service.ReturnService;
+import com.gamezone.persistence.SalePersistence;
+import com.gamezone.persistence.CustomerPersistence;
+import com.gamezone.persistence.SellerPersistence;
+import com.gamezone.persistence.ProductPersistence;
+import com.gamezone.persistence.ReturnPersistence;
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -18,10 +24,24 @@ import javax.swing.table.DefaultTableModel;
  * @author jahdiel
  */
 public class ReturnPanel extends JPanel {
+    
 
+    private CustomerPersistence customerPersistence = new CustomerPersistence();
+    private SellerPersistence sellerPersistence = new SellerPersistence();
+    private ProductPersistence productPersistence = new ProductPersistence();
+
+
+    
     private CustomerService customerService = new CustomerService();
     private SellerService sellerService = new SellerService();
-    private ReturnService returnService = new ReturnService();
+    private ProductService productService = new ProductService();
+    
+    private SalePersistence salePersistence = new SalePersistence(productService, sellerService, customerService);
+    private SaleService saleService = new SaleService(salePersistence, productService, sellerService, customerService);
+
+    
+    private ReturnPersistence returnPersistence = new ReturnPersistence(saleService, productService);
+    private ReturnService returnService = new ReturnService(returnPersistence, saleService, productService);
 
     private JTextField txtReason, txtName, txtId, txtValue, txtMonth, txtYear;
     private JComboBox<String> comboProducts;
