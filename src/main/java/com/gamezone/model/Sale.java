@@ -109,21 +109,8 @@ public final class Sale {
         return totalValue;
     }
     
-    public double saleTotalValue() {
-        double resultValue = 0;
-        for (AmountOfProduct p: productTrack) {
-            double price;
-            double amount;
-            amount = p.getProductAmount();
-            price = p.getSoldProduct().getPrice();
-            resultValue+=(price*amount);
-        }
-        
-        if (this.appliedPromotion != null || !this.appliedPromotion.isEmpty()) {
-            resultValue=resultValue*(1-promotionDiscount);
-        }
-        
-        return resultValue;
+    public void setTotalValue(double total) {
+        this.totalValue = total;
     }
 
     public String getAppliedPromotion() {
@@ -162,8 +149,8 @@ public final class Sale {
             saleReceipt.append("===================== VALOR TOTAL =====================");
             saleReceipt.append("PROMOCIÓN        : ").append(appliedPromotion);
             saleReceipt.append("DESCUENTO        : ").append(promotionDiscount);
-            saleReceipt.append("VALOR DE LA VENTA: ").append(saleTotalValue()/(1-promotionDiscount));
-            saleReceipt.append("VALOR A PAGAR    : ").append(saleTotalValue());
+            saleReceipt.append("VALOR DE LA VENTA: ").append(totalValue/(1-promotionDiscount));
+            saleReceipt.append("VALOR A PAGAR    : ").append(totalValue);
         return saleReceipt.toString();
     }
     /**
