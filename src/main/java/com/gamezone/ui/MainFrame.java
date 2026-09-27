@@ -20,6 +20,7 @@ public class MainFrame extends JFrame {
     private JButton btnProducts;
     private JButton btnPeople;
     private JButton btnSales;
+    private JButton btnPromotions;
     private JButton btnExit;
 
     public MainFrame() {
@@ -45,6 +46,7 @@ public class MainFrame extends JFrame {
         btnPeople = createMenuButton("Personas");
         btnSales = createMenuButton("Ventas");
         btnExit = createMenuButton("Salir");
+        btnPromotions = createMenuButton("Promociones");
 
         sidebar.add(btnHome);
         sidebar.add(btnProducts);
@@ -52,6 +54,7 @@ public class MainFrame extends JFrame {
         sidebar.add(btnSales);
         sidebar.add(new JLabel());
         sidebar.add(btnExit);
+        sidebar.add(btnPromotions);
 
         // Center panel with CardLayout
         cardLayout = new CardLayout();
@@ -64,12 +67,14 @@ public class MainFrame extends JFrame {
         // TODO: cuando existan, agregar:
         // centerPanel.add(new PersonPanel(), "people");
         // centerPanel.add(new SalePanel(), "sales");
+        centerPanel.add(new PromotionPanel(), "promotions");
 
         btnHome.addActionListener(e -> cardLayout.show(centerPanel, "home"));
         btnProducts.addActionListener(e -> cardLayout.show(centerPanel, "products"));
         btnPeople.addActionListener(e -> cardLayout.show(centerPanel, "people"));
         btnSales.addActionListener(e -> cardLayout.show(centerPanel, "sales"));
         btnExit.addActionListener(e -> System.exit(0));
+        btnPromotions.addActionListener(e -> cardLayout.show(centerPanel, "promotions"));
 
         add(sidebar, BorderLayout.WEST);
         add(centerPanel, BorderLayout.CENTER);
