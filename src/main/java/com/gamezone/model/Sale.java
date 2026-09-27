@@ -46,16 +46,20 @@ public final class Sale {
     private ArrayList<AmountOfProduct> productTrack; // 
     private Seller seller; // Vendedor que genera la venta
     private Customer customer; // Consumidor o Cliente que realiza la compra
+    private String appliedPromotion; // Nombre de la promoción aplicada a la venta
+    private double promotionDiscount; // Valor de descuento promocional del valor total de la venta
     private double totalValue; // Valor total monetario de la venta
     
     // Constructores para inicialización parametrizada
     
-    public Sale(long uId, LocalDate date, ArrayList<AmountOfProduct> productTrack, Seller seller, Customer customer) {
+    public Sale(long uId, LocalDate date, ArrayList<AmountOfProduct> productTrack, Seller seller, Customer customer, String appliedPromotion, double promotionDiscount) {
         this.uId = uId;
         this.date = date;
         this.productTrack = productTrack;
         this.seller = seller;
         this.customer = customer;
+        this.appliedPromotion = appliedPromotion;
+        this.promotionDiscount = promotionDiscount;
         this.totalValue = 0;
     }
     
@@ -101,8 +105,9 @@ public final class Sale {
         this.customer = costumer;
     }
     
-    
-    // Espacio para desarrollar posibles comportamientos del objeto personalizados
+    public double getTotalValue() {
+        return totalValue;
+    }
     
     public double saleTotalValue() {
         double resultValue = 0;
@@ -113,8 +118,30 @@ public final class Sale {
             price = p.getSoldProduct().getPrice();
             resultValue+=(price*amount);
         }
+        
+        if (this.appliedPromotion != null || !this.appliedPromotion.isEmpty()) {
+            resultValue=resultValue*(1-promotionDiscount);
+        }
+        
         return resultValue;
     }
+
+    public String getAppliedPromotion() {
+        return appliedPromotion;
+    }
+
+    public void setAppliedPromotion(String appliedPromotion) {
+        this.appliedPromotion = appliedPromotion;
+    }
+
+    public double getPromotionDiscount() {
+        return promotionDiscount;
+    }
+
+    public void setPromotionDiscount(double promotionDiscount) {
+        this.promotionDiscount = promotionDiscount;
+    }
+    
     
     public String receiptGen() {
         
@@ -122,17 +149,21 @@ public final class Sale {
         int index = 0;
         
             saleReceipt.append("============== GAMEZONE UNICESAR FACTURA ==============");
-            saleReceipt.append("IDENTIFICADOR  :   ").append(uId);
-            saleReceipt.append("FECHA DE VENTA :   ").append(date);
-            saleReceipt.append("CLIENTE        :   ").append(customer);
-            saleReceipt.append("VENDEDOR       :   ").append(seller);
+            saleReceipt.append("IDENTIFICADOR    :   ").append(uId);
+            saleReceipt.append("FECHA DE VENTA   :   ").append(date);
+            saleReceipt.append("CLIENTE          :   ").append(customer);
+            saleReceipt.append("VENDEDOR         :   ").append(seller);
             saleReceipt.append("================ PRODUCTOS ADQUIRIDOS =================");
         for (AmountOfProduct e: productTrack) {
             index++;
             saleReceipt.append("PRODUCTO  #").append(index).append("  : ").append(e.getSoldProduct());
-            saleReceipt.append("CANTIDAD       : ").append(e.getProductAmount());
+            saleReceipt.append("CANTIDAD         : ").append(e.getProductAmount());
         }
-            saleReceipt.append("VALOR TOTAL    : ").append(totalValue);
+            saleReceipt.append("===================== VALOR TOTAL =====================");
+            saleReceipt.append("PROMOCIÓN        : ").append(appliedPromotion);
+            saleReceipt.append("DESCUENTO        : ").append(promotionDiscount);
+            saleReceipt.append("VALOR DE LA VENTA: ").append(saleTotalValue()/(1-promotionDiscount));
+            saleReceipt.append("VALOR A PAGAR    : ").append(saleTotalValue());
         return saleReceipt.toString();
     }
     /**
