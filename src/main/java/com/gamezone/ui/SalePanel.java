@@ -7,6 +7,7 @@ import com.gamezone.service.CustomerService;
 import com.gamezone.service.ProductService;
 import com.gamezone.service.SaleService;
 import com.gamezone.service.SellerService;
+import com.gamezone.service.AccesoryService;
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,7 +31,7 @@ public class SalePanel extends JPanel {
             new SaleService(salePersistence, productService, sellerService, customerService);
 
     private JTextField txtCustomerId, txtEmployeeCode;
-    private JComboBox<String> comboProduct;
+    private JComboBox<String> comboProduct, comboAccesory;
     private JTextField txtQuantity;
     private Map<String, Integer> cart = new LinkedHashMap<>();
 
