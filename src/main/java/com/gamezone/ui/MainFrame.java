@@ -1,5 +1,14 @@
 package com.gamezone.ui;
-
+import com.gamezone.persistence.SalePersistence;
+import com.gamezone.persistence.ReturnPersistence;
+import com.gamezone.persistence.ProductPersistence;
+import com.gamezone.persistence.SellerPersistence;
+import com.gamezone.persistence.CustomerPersistence;
+import com.gamezone.service.CustomerService;
+import com.gamezone.service.ProductService;
+import com.gamezone.service.SaleService;
+import com.gamezone.service.SellerService;
+import com.gamezone.service.ReturnService;
 import java.awt.*;
 import javax.swing.*;
 
@@ -11,6 +20,17 @@ import javax.swing.*;
  * @author jahdiel
  */
 public class MainFrame extends JFrame {
+    
+    private CustomerService customerService = new CustomerService();
+    private SellerService sellerService = new SellerService();
+    private ProductService productService = new ProductService();
+    
+    private SalePersistence salePersistence = new SalePersistence(productService, sellerService, customerService);
+    private SaleService saleService = new SaleService(salePersistence, productService, sellerService, customerService);
+
+    
+    private ReturnPersistence returnPersistence = new ReturnPersistence(saleService, productService);
+    private ReturnService returnService = new ReturnService(returnPersistence, saleService, productService);
 
     private JPanel sidebar;
     private JPanel centerPanel;
@@ -64,7 +84,7 @@ public class MainFrame extends JFrame {
         centerPanel.add(new ProductPanel(), "products");
         centerPanel.add(new PersonPanel(), "people");
         centerPanel.add(new SalePanel(), "sales");
-        centerPanel.add(new ReturnPanel(), "returns");
+        centerPanel.add(new ReturnPanel(returnService, saleService), "returns");
 
         btnHome.addActionListener(e -> cardLayout.show(centerPanel, "home"));
         btnProducts.addActionListener(e -> cardLayout.show(centerPanel, "products"));
