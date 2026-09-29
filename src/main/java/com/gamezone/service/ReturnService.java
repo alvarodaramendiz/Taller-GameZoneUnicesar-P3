@@ -46,13 +46,16 @@ public class ReturnService {
      * @return the registered return
      * @throws IllegalArgumentException if any validation fails
      */
-    public Return registerReturn(String saleId, List<String> productIds, String reason) {
+    public Return registerReturn(long saleId, List<String> productIds, String reason, double amount) {
         Sale sale = findSale(saleId);
         if (sale == null) {
             throw new IllegalArgumentException("La venta indicada no existe: " + saleId);
         }
         if (!sale.canBeReturned()) {
             throw new IllegalArgumentException("La venta supera el plazo de 30 días para devoluciones.");
+        }     
+        if (amount<0) {
+            throw new IllegalArgumentException("La venta contiene reembolso negativo.");
         }
         if (productIds == null || productIds.isEmpty()) {
             throw new IllegalArgumentException("Debe indicar al menos un producto a devolver.");
@@ -144,9 +147,9 @@ public class ReturnService {
         return totalSales - totalReturns;
     }
 
-    private Sale findSale(String saleId) {
+    private Sale findSale(long saleId) {
         for (Sale sale : saleService.viewAllSales()) {
-            if (String.valueOf(sale.getuId()).equals(saleId)) {
+            if (sale.getuId() == (saleId)) {
                 return sale;
             }
         }
