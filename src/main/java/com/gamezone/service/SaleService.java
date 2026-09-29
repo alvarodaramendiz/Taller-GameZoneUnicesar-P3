@@ -78,6 +78,10 @@ public class SaleService {
         for (Map.Entry<String, Integer> entry : productQuantities.entrySet()) {
             String productId = entry.getKey();
             int amount = entry.getValue();
+            if (amount <= 0) {
+                throw new IllegalArgumentException(
+                    "Cantidad inválida de producto, introdujo: " + amount);
+            }
             Product product = findProduct(productId);
             if (product == null) {
                 throw new IllegalArgumentException("Producto no encontrado: " + productId);
@@ -91,12 +95,6 @@ public class SaleService {
         long uId = System.currentTimeMillis();
         Sale sale = new Sale(uId, LocalDate.now(), new ArrayList<>(), seller, customer);
         sale.setProductTrack(buildProductTrack(sale, productQuantities));
-
-        // NOTA: a diferencia del SaleService de referencia, aquí no se
-        // descuenta el stock todavía. ProductDAO solo sabe agregar productos
-        // (saveProduct los añade al final del archivo) y no tiene un método
-        // para actualizar uno existente. En cuanto ProductDAO/ProductService
-        // tengan esa operación, aquí es donde se llamaría.
 
         sales.add(sale);
         repository.saveAll(sales);
