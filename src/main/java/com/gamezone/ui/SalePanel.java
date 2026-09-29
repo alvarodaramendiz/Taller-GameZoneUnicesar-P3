@@ -157,7 +157,7 @@ public class SalePanel extends JPanel {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }
-
+    
     private void refreshSalesTable() {
         salesTableModel.setRowCount(0);
         List<Sale> sales = saleService.viewAllSales();
