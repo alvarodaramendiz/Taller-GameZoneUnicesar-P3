@@ -101,6 +101,10 @@ public final class Sale {
         this.customer = costumer;
     }
     
+    public double getTotalValue() {
+        return this.totalValue;
+    }
+    
     
     // Espacio para desarrollar posibles comportamientos del objeto personalizados
     
