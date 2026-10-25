@@ -258,52 +258,58 @@ public class ReturnPanel extends JPanel {
         return pane;
     }
 
-    private JPanel createByCustomerTab(java.util.List<Return> returns) {
-        JPanel pane = new JPanel(new BorderLayout(5, 5));
-        JPanel customerSearch = new JPanel(new GridLayout(2, 4, 8, 8));
-        customerSearch.setBorder(BorderFactory.createTitledBorder("Consulta por Cliente"));
-        JButton btnSearchCustomer = new JButton("Buscar");
-        txtCustomerId = new JTextField();
-        try {
-            btnSearchCustomer.addActionListener(e -> {
-                long id = Long.parseLong(txtCustomerId.getText());
-                StringBuilder pIds = new StringBuilder();
-                pIds.setLength(0);
-                viewReturnsTableModel.setColumnIdentifiers(new String[]{"ID Cliente", "ID Empleado", "ID Devolución", "ID Venta", "Fecha", "Productos", "Motivo de Devolución", "Reembolso"});
-                viewReturnsTableModel.setRowCount(0);
-                for (Return r : returns) {
-                    if (r.getSale().getCustomer().getiD() == id) {
-                        var returned = r.getReturnedProducts();
-                        for (Product p : returned) {
-                            pIds.append("(").append(p.getProductId()).append(") ");
-                        }
-                        viewReturnsTableModel.addRow(new Object[]{
-                            r.getSale().getSeller().getEmployeeCode(),
-                            r.getSale().getCustomer().getiD(),
-                            r.getIdReturn(),
-                            r.getSale().getuId(),
-                            r.getDate(),
-                            pIds.toString(),
-                            r.getReturnReason(),
-                            r.getReimbursedAmount()
-                        });
-                        JOptionPane.showMessageDialog(null, "Se ha encontrado al cliente.", "Devoluciones", 0);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "No se encontró ningún cliente con este ID.", "Devoluciones", 0);
-                    }
-                }
-
-            });
-            customerSearch.add(new JLabel("ID de Cliente:"));
-            customerSearch.add(txtCustomerId, BorderLayout.NORTH);
-            customerSearch.add(btnSearchCustomer, BorderLayout.CENTER);
-            pane.add(customerSearch, BorderLayout.NORTH);
-            pane.add(new JScrollPane(viewReturnsTable), BorderLayout.CENTER);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Entrada inválida.", "Devoluciones", 0);
+private JPanel createByCustomerTab(java.util.List<Return> returns) {
+    JPanel pane = new JPanel(new BorderLayout(5, 5));
+    JPanel customerSearch = new JPanel(new GridLayout(2, 4, 8, 8));
+    customerSearch.setBorder(BorderFactory.createTitledBorder("Consulta por Cliente"));
+    JButton btnSearchCustomer = new JButton("Buscar");
+    txtCustomerId = new JTextField();
+    btnSearchCustomer.addActionListener(e -> {
+        String text = txtCustomerId.getText().trim();
+        if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese el ID del cliente.", "Devoluciones", 0);
+            return;
         }
-        return pane;
-    }
+        long id;
+        try {
+            id = Long.parseLong(text);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Entrada inválida.", "Devoluciones", 0);
+            return;
+        }
+        viewReturnsTableModel.setColumnIdentifiers(new String[]{"ID Cliente", "ID Empleado", "ID Devolución", "ID Venta", "Fecha", "Productos", "Motivo de Devolución", "Reembolso"});
+        viewReturnsTableModel.setRowCount(0);
+        for (Return r : returns) {
+            if (r.getSale().getCustomer().getiD() == id) {
+                StringBuilder pIds = new StringBuilder();
+                for (Product p : r.getReturnedProducts()) {
+                    pIds.append("(").append(p.getProductId()).append(") ");
+                }
+                viewReturnsTableModel.addRow(new Object[]{
+                    r.getSale().getCustomer().getiD(),
+                    r.getSale().getSeller().getEmployeeCode(),
+                    r.getIdReturn(),
+                    r.getSale().getuId(),
+                    r.getDate(),
+                    pIds.toString(),
+                    r.getReturnReason(),
+                    r.getReimbursedAmount()
+                });
+            }
+        }
+        if (viewReturnsTableModel.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "No se encontraron devoluciones para este cliente.", "Devoluciones", 0);
+        } else {
+            JOptionPane.showMessageDialog(null, "Se ha encontrado al cliente.", "Devoluciones", 0);
+        }
+    });
+    customerSearch.add(new JLabel("ID de Cliente:"));
+    customerSearch.add(txtCustomerId, BorderLayout.NORTH);
+    customerSearch.add(btnSearchCustomer, BorderLayout.CENTER);
+    pane.add(customerSearch, BorderLayout.NORTH);
+    pane.add(new JScrollPane(viewReturnsTable), BorderLayout.CENTER);
+    return pane;
+}
 
     private JPanel createIdSearchTab(java.util.List<Return> returns) {
         StringBuilder pIds = new StringBuilder();
