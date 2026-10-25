@@ -1,0 +1,21 @@
+# Exception Handling and Validation Analysis
+
+## 1. The root class GameZoneException can be declared as Exception (checked) or as RuntimeException (unchecked). Which of the two options is more suitable for this project and why? What consequence does it have on the signatures of the service and repository methods?
+
+- The GameZone project is an application designed for open use. The RuntimeExceptions are the most suitable as a root class for GameZoneException, since the exceptions must be catched while the java application is running, not when it is compiling, which is what the Exception root class does. These are naturally incorporated, therefore, they are not necessary and do not produce any consequence over the service or repository methods.
+
+## 2. Why is it preferable to have a hierarchy of custom exceptions with a common root class (GameZoneException) instead of throwing a generic IllegalArgumentException in all cases? Which design principles are applied?
+
+- The applied design principle is the architectural layer deisgn principle, where the exceptions and validations must be separate from each other to have an organized system. For example, the `ProductService` must use both layers of validations and exceptions, but they should not be structured simultaneously in the same service class, the business logic must be separated from any runtime exception.
+
+## 3. The validators form a new layer (com.gamezone.validation). At what point in the flow are they invoked, and why is this location consistent with the layered architecture of the system? Can the validators access the persistence package? Justify your answer.
+
+- The `validators` are invoked in every method of the classes of `service` layer, which are related to the basic modules of `Products`, `Person`, and `Sales`. There are only three validators, each being part of each module. A validator class can be invoked by any of the services of those basic modules for data validation. The `ProductService` invokes the `ProductValidator` to verify the entries of a new product; if it has a duplicated ID, or an invalid classification.
+
+## 4. The refactor must preserve the external behavior of the system. What strategy does the team follow to guarantee that the 10 menu operations keep working the same way? What evidence is shown at the end to demonstrate that nothing was broken?
+
+- The team performs a refactoring process over the system, only targeting the exceptions and validations and moving them to external layers from the selected `persistence` (aka repository), `service` and `ui` layers. This does not affect the overall behaviour, because none of the validation logic has been changed in any way, it has only been moved to a different location inside the internal scheme. The class diagram can serve as an evidence that none of the components have been broken, the workflow remains exactly the same, with a newly incorporated layer and classes that perform functions, methods or behaviours that already existed previously, and that are now being used in replacement of the previous messy structure of the services, persistence and user interface. The functionality test can also serve as an evidence, where a tester can use exception-catchable or validation-catchable inputs, and compare those procedures with a previous version that does not have the new requirement applied; It must remain exactly the same behaviour.
+
+## 5. The ConsoleMenu class used to catch a single generic exception. Now it must catch four different types. Is this done with a single try block with multiple catch blocks, with cascading catch blocks, or with a general catch (GameZoneException)? Justify the choice considering code clarity and the differentiation of the messages shown to the user.
+
+- The UI classes or classes must catch multiple exceptions, such as `InvalidDataException`, `ResourceNotFoundException`, `PersistenceException`, and `BusinessRuleException`. It can use another exceptions, but all of the previous exceptions should be used for business logic and persistence. The classes catch them through a cascade method, just like the layer architecture, where the system receives the data, tries to register it, verifies its validations, and throws any of the new exceptions if necessary.
