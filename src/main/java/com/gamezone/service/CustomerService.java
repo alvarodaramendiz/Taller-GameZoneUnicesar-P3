@@ -1,7 +1,7 @@
 package com.gamezone.service;
 
 import com.gamezone.model.Customer;
-import com.gamezone.persistence.CustomerDAO;
+import com.gamezone.persistence.CustomerPersistence;
 import java.util.ArrayList;
 
 /**
@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class CustomerService {
 
-    private CustomerDAO customerDAO = new CustomerDAO();
+    private CustomerPersistence customerDAO = new CustomerPersistence();
 
     /**
      * * Validates the information provided for a customer. 

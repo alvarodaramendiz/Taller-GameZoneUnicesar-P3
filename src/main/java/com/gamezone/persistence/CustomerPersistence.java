@@ -17,7 +17,7 @@ import utilities.PlainArchives;
  *
  * @author EstefaniaMarquez
  */
-public class CustomerDAO {
+public class CustomerPersistence {
 
     /**
      * Saves a single Customer record by appending it to the persistence file.

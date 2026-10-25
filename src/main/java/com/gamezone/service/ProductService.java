@@ -3,7 +3,7 @@ package com.gamezone.service;
 import com.gamezone.model.Product;
 import com.gamezone.model.VideoGame;
 import com.gamezone.model.Console;
-import com.gamezone.persistence.ProductDAO;
+import com.gamezone.persistence.ProductPersistence;
 import java.util.List;
 
 /**
@@ -14,10 +14,13 @@ import java.util.List;
  */
 public class ProductService {
 
-    private ProductDAO productDAO;
+    private ProductPersistence productDAO;
 
+    /**
+     * Creates a new ProductService with its own product persistence.
+     */
     public ProductService() {
-        this.productDAO = new ProductDAO();
+        this.productDAO = new ProductPersistence();
     }
 
     /**
@@ -75,6 +78,28 @@ public class ProductService {
     }
 
     /**
+     * Updates the stock of a product by the given quantity and saves the
+     * change. A positive quantity adds units and a negative one removes them.
+     *
+     * @param productId the ID of the product to update
+     * @param quantity the number of units to add (positive) or remove (negative)
+     * @throws IllegalArgumentException if the product does not exist or the
+     *         resulting stock would be negative
+     */
+    public void updateStock(String productId, int quantity) {
+        Product product = productDAO.searchProduct(productId);
+        if (product == null) {
+            throw new IllegalArgumentException("Producto no encontrado: " + productId);
+        }
+        int newStock = product.getStock() + quantity;
+        if (newStock < 0) {
+            throw new IllegalArgumentException("Stock insuficiente para el producto: " + product.getTitle());
+        }
+        product.setStock(newStock);
+        productDAO.updateProduct(product);
+    }
+
+    /**
      * Validates the common attributes shared by all products.
      *
      * @param product the product to validate
@@ -106,5 +131,21 @@ public class ProductService {
         return ageRating != null && (
                 ageRating.equals("E") || ageRating.equals("E10+") ||
                 ageRating.equals("T") || ageRating.equals("M") || ageRating.equals("AO"));
+    }
+    
+    public String restoreStock(String productId, int quantity) {
+        Product p = productDAO.searchProduct(productId);
+        
+        if (p != null) {
+            if (quantity>=1) {
+                p.setStock(p.getStock()+quantity);
+                productDAO.updateProduct(p);
+                return "Producto restockeado.";
+            } else {
+                return "Cantidad no válida. Intente de nuevo.";
+            }
+        } else {
+            return "Producto no válido. Intente de nuevo.";
+        }
     }
 }
