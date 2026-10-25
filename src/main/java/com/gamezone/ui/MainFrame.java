@@ -87,22 +87,23 @@ public class MainFrame extends JFrame {
         btnProducts = createMenuButton("Productos");
         btnPeople = createMenuButton("Personas");
         btnSales = createMenuButton("Ventas");
-        btnExit = createMenuButton("Salir");
         btnAccesories = createMenuButton("Accesorios");
         btnPromotions = createMenuButton("Promociones");
         btnWarranties = createMenuButton("Garantías");
         btnReturns = createMenuButton("Devoluciones");
+        btnExit = createMenuButton("Salir");
 
         sidebar.add(btnHome);
         sidebar.add(btnProducts);
         sidebar.add(btnPeople);
         sidebar.add(btnSales);
+        sidebar.add(btnAccesories);
+        sidebar.add(btnPromotions);
         sidebar.add(btnWarranties);
         sidebar.add(btnReturns);
         sidebar.add(new JLabel());
         sidebar.add(btnExit);
-        sidebar.add(btnAccesories);
-        sidebar.add(btnPromotions);
+
 
         // Center panel with CardLayout
         cardLayout = new CardLayout();
