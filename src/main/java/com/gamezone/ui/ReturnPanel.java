@@ -1,5 +1,9 @@
 package com.gamezone.ui;
 
+import com.gamezone.exceptions.BusinessRuleException;
+import com.gamezone.exceptions.InvalidDataException;
+import com.gamezone.exceptions.PersistenceException;
+import com.gamezone.exceptions.ResourceNotFoundException;
 import com.gamezone.model.Return;
 import com.gamezone.model.Sale;
 import com.gamezone.model.Product;
@@ -100,7 +104,12 @@ public class ReturnPanel extends JPanel {
         comboOptions.addActionListener(e -> {
             viewReturnsTableModel.setRowCount(0);
             JPanel temp = new JPanel();
-            temp = refreshViewTable(comboOptions.getSelectedItem().toString());
+            try {
+                temp = refreshViewTable(comboOptions.getSelectedItem().toString());
+            } catch (PersistenceException ex) {
+                JOptionPane.showMessageDialog(panel, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.");
+                return;
+            }
             temp.setVisible(true);
             BorderLayout layout = (BorderLayout) panel.getLayout();
             java.awt.Component comp = layout.getLayoutComponent(panel, BorderLayout.CENTER);
@@ -156,6 +165,8 @@ public class ReturnPanel extends JPanel {
             JOptionPane.showMessageDialog(null, "No se encontró ninguna venta con este UID.", "Devoluciones", 0);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Entrada inválida.", "Devoluciones", 0);
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(null, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.", "Devoluciones", 0);
         }
     }
 
@@ -173,6 +184,14 @@ public class ReturnPanel extends JPanel {
             txtValue.setText("");
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Los IDs y la cantidad deben ser números válidos.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "No se encontró el recurso solicitado: " + e.getMessage(), "Error en devolución", JOptionPane.ERROR_MESSAGE);
+        } catch (BusinessRuleException e) {
+            JOptionPane.showMessageDialog(this, "No se puede completar la operación: " + e.getMessage(), "Error en devolución", JOptionPane.ERROR_MESSAGE);
+        } catch (InvalidDataException e) {
+            JOptionPane.showMessageDialog(this, "Los datos ingresados no son válidos: " + e.getMessage(), "Error en devolución", JOptionPane.ERROR_MESSAGE);
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.", "Error en devolución", JOptionPane.ERROR_MESSAGE);
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error en devolución", JOptionPane.ERROR_MESSAGE);
         }
@@ -199,6 +218,8 @@ public class ReturnPanel extends JPanel {
                     r.getReimbursedAmount()
                 });
             }
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.");
         } catch (Exception e) {
             System.out.println("Error al cargar la tabla de devoluciones: " + e.getMessage());
         }
@@ -353,6 +374,8 @@ public class ReturnPanel extends JPanel {
             );
         } catch (NumberFormatException | java.time.DateTimeException e) {
             JOptionPane.showMessageDialog(null, "Entrada inválida.", "Balance Mensual", 0);
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(null, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.", "Balance Mensual", 0);
         }
     }
 }
