@@ -1,5 +1,9 @@
 package com.gamezone.ui;
 
+import com.gamezone.exceptions.BusinessRuleException;
+import com.gamezone.exceptions.InvalidDataException;
+import com.gamezone.exceptions.PersistenceException;
+import com.gamezone.exceptions.ResourceNotFoundException;
 import com.gamezone.model.Accessory;
 import com.gamezone.service.AccessoryService;
 import java.awt.*;
@@ -268,8 +272,15 @@ public class AccessoryPanel extends JPanel {
             refreshAllTables();
         } catch (NumberFormatException e) {
             showMessage("Precio, stock, longitud y capacidad deben ser números válidos.");
+        } catch (ResourceNotFoundException e) {
+            showMessage("No se encontró el recurso solicitado: " + e.getMessage());
+        } catch (BusinessRuleException e) {
+            showMessage("No se puede completar la operación: " + e.getMessage());
+        } catch (InvalidDataException e) {
+            showMessage("Los datos ingresados no son válidos: " + e.getMessage());
+        } catch (PersistenceException e) {
+            showMessage("Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.");
         } catch (IllegalArgumentException e) {
-            // Business messages come from AccessoryService (already in Spanish)
             showMessage(e.getMessage());
         }
     }
