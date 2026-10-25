@@ -1,5 +1,9 @@
 package com.gamezone.ui;
 
+import com.gamezone.exceptions.BusinessRuleException;
+import com.gamezone.exceptions.InvalidDataException;
+import com.gamezone.exceptions.PersistenceException;
+import com.gamezone.exceptions.ResourceNotFoundException;
 import com.gamezone.model.BulkPurchaseDiscount;
 import com.gamezone.model.CategoryDiscount;
 import com.gamezone.model.PercentageDiscount;
@@ -207,6 +211,14 @@ public class PromotionPanel extends JPanel {
             showMessage("Las fechas deben tener el formato AAAA-MM-DD (por ejemplo, 2026-09-08).");
         } catch (NumberFormatException e) {
             showMessage("El porcentaje y la cantidad mínima deben ser números válidos.");
+        } catch (ResourceNotFoundException e) {
+            showMessage("No se encontró el recurso solicitado: " + e.getMessage());
+        } catch (BusinessRuleException e) {
+            showMessage("No se puede completar la operación: " + e.getMessage());
+        } catch (InvalidDataException e) {
+            showMessage("Los datos ingresados no son válidos: " + e.getMessage());
+        } catch (PersistenceException e) {
+            showMessage("Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.");
         } catch (IllegalArgumentException e) {
             showMessage(e.getMessage());
         }
