@@ -1,5 +1,9 @@
 package com.gamezone.ui;
 
+import com.gamezone.exceptions.BusinessRuleException;
+import com.gamezone.exceptions.InvalidDataException;
+import com.gamezone.exceptions.PersistenceException;
+import com.gamezone.exceptions.ResourceNotFoundException;
 import com.gamezone.service.WarrantyService;
 import com.gamezone.service.SaleService;
 import com.gamezone.model.Warranty;
@@ -126,11 +130,16 @@ public class WarrantyPanel extends JPanel {
             return;
         }
 
-        for (Sale sale : saleService.viewAllSales()) {
-            if (sale.getuId() == saleId) {
-                currentSale = sale;
-                break;
+        try {
+            for (Sale sale : saleService.viewAllSales()) {
+                if (sale.getuId() == saleId) {
+                    currentSale = sale;
+                    break;
+                }
             }
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.");
+            return;
         }
 
         if (currentSale == null) {
@@ -164,8 +173,17 @@ public class WarrantyPanel extends JPanel {
         try {
             warranty = warrantyService
                     .findWarrantyByProduct(productId, String.valueOf(currentSale.getuId()));
-        } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(this, "No se pudo consultar la garantía: " + e.getMessage());
+        } catch (ResourceNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "No se encontró el recurso solicitado: " + e.getMessage());
+            return;
+        } catch (BusinessRuleException e) {
+            JOptionPane.showMessageDialog(this, "No se puede completar la operación: " + e.getMessage());
+            return;
+        } catch (InvalidDataException e) {
+            JOptionPane.showMessageDialog(this, "Los datos ingresados no son válidos: " + e.getMessage());
+            return;
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.");
             return;
         }
 
