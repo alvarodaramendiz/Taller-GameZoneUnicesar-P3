@@ -1,5 +1,9 @@
 package com.gamezone.ui;
 
+import com.gamezone.exceptions.BusinessRuleException;
+import com.gamezone.exceptions.InvalidDataException;
+import com.gamezone.exceptions.PersistenceException;
+import com.gamezone.exceptions.ResourceNotFoundException;
 import com.gamezone.model.Accessory;
 import com.gamezone.model.Product;
 import com.gamezone.model.Sale;
@@ -147,8 +151,12 @@ public class SalePanel extends JPanel {
 
     private void refreshProductCombo() {
         comboProduct.removeAllItems();
-        for (Product p : productService.listProducts()) {
-            comboProduct.addItem(p.getProductId() + " - " + p.getTitle());
+        try {
+            for (Product p : productService.listProducts()) {
+                comboProduct.addItem(p.getProductId() + " - " + p.getTitle());
+            }
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.");
         }
     }
 
@@ -219,7 +227,16 @@ public class SalePanel extends JPanel {
             refreshAccessoryCombo();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "ID de cliente y código de vendedor deben ser números válidos.");
+        } catch (ResourceNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "No se encontró el recurso solicitado: " + e.getMessage());
+        } catch (BusinessRuleException e) {
+            JOptionPane.showMessageDialog(this, "No se puede completar la operación: " + e.getMessage());
+        } catch (InvalidDataException e) {
+            JOptionPane.showMessageDialog(this, "Los datos ingresados no son válidos: " + e.getMessage());
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.");
         } catch (IllegalArgumentException e) {
+            // Accessory and warranty services still report their errors this way
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }
@@ -251,12 +268,16 @@ public class SalePanel extends JPanel {
 
     private void refreshSalesTable() {
         salesTableModel.setRowCount(0);
-        List<Sale> sales = saleService.viewAllSales();
-        for (Sale s : sales) {
-            salesTableModel.addRow(new Object[]{
-                    s.getuId(), s.getDate(), s.getCustomer().getName(),
-                    s.getSeller().getName(), s.getTotalValue()
-            });
+        try {
+            List<Sale> sales = saleService.viewAllSales();
+            for (Sale s : sales) {
+                salesTableModel.addRow(new Object[]{
+                        s.getuId(), s.getDate(), s.getCustomer().getName(),
+                        s.getSeller().getName(), s.getTotalValue()
+                });
+            }
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.");
         }
     }
 }

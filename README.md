@@ -15,6 +15,8 @@ A parent package **com.gamezone** is used to contain the entire package architec
 
 The layered architecture that GameZone contains is the following: `com.gamezone.ui -> com.gamezone.service -> com.gamezone.persistence -> com.gamezone.model`
 
+Two additional packages complete the architecture (see Version 1.0.5): `com.gamezone.exceptions`, a cross-cutting layer usable from any other layer, and `com.gamezone.validation`, located logically between `service` and `model`.
+
 ```mermaid
 flowchart TD
     UI["ui"] --> SERVICE["service"]
@@ -56,3 +58,12 @@ Adds a 6-month basic warranty for every sold console and an optional 12-month ex
 Adds partial returns of a sale within 30 days (`Return`), stored in `data/returns.csv` by `ReturnPersistence` and managed by `ReturnService`. It relates to `Sale` and `SaleService` to find the original sale, to `ProductService` and `AccessoryService` to restore the stock, to the promotion module because the refund is proportional to the discount of the sale, and to `WarrantyService` to cancel and refund the warranties of returned consoles. 
 
 - `ReturnPanel` lets the user search a sale and register a return, list the returns by customer or by sale, and see the monthly report with total sales, total returns and net balance.
+
+### Version 1.0.5 — Validations and Exceptions Layer
+
+Adds a cross-cutting layer that replaces the generic `IllegalArgumentException` and `IOException` with typed errors, so the user can tell whether a problem comes from the data entered, the business rules, a missing resource or the system files. It does not add new features: every existing operation works exactly as before and only the error messages are clearer.
+
+- `com.gamezone.exceptions`: `GameZoneException` is the unchecked (`RuntimeException`) root of the hierarchy, with an error code. Its four subclasses are `ResourceNotFoundException` (a requested resource does not exist), `BusinessRuleException` (a business rule is broken, such as insufficient stock or a duplicated customer), `InvalidDataException` (an input does not meet the expected format or range) and `PersistenceException` (an error while reading or writing a file, which keeps the original `IOException` as its cause).
+- `com.gamezone.validation`: `ProductValidator`, `PersonValidator` and `SaleValidator` concentrate the verification rules with static methods. The services call them before running any business operation, and they never call services or repositories nor access files.
+- Services and repositories: `ProductService`, `CustomerService`, `SellerService` and `SaleService` delegate their validations to the validators and throw typed exceptions, while `ProductPersistence`, `CustomerPersistence`, `SellerPersistence` and `SalePersistence` wrap every `IOException` in a `PersistenceException` that names the file and the operation.
+- User interface: every panel (`ProductPanel`, `PersonPanel`, `SalePanel`, `AccessoryPanel`, `PromotionPanel`, `WarrantyPanel` and `ReturnPanel`) catches each exception by its specific type and shows a different message in Spanish: resource not found, operation that cannot be completed, invalid data, or a problem accessing the system data (which asks the user to contact the administrator). The user never sees a technical message or a raw stack trace.

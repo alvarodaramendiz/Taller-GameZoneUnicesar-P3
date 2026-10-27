@@ -1,5 +1,9 @@
 package com.gamezone.ui;
 
+import com.gamezone.exceptions.BusinessRuleException;
+import com.gamezone.exceptions.InvalidDataException;
+import com.gamezone.exceptions.PersistenceException;
+import com.gamezone.exceptions.ResourceNotFoundException;
 import com.gamezone.model.Return;
 import com.gamezone.model.Sale;
 import com.gamezone.model.Product;
@@ -100,7 +104,12 @@ public class ReturnPanel extends JPanel {
         comboOptions.addActionListener(e -> {
             viewReturnsTableModel.setRowCount(0);
             JPanel temp = new JPanel();
-            temp = refreshViewTable(comboOptions.getSelectedItem().toString());
+            try {
+                temp = refreshViewTable(comboOptions.getSelectedItem().toString());
+            } catch (PersistenceException ex) {
+                JOptionPane.showMessageDialog(panel, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.");
+                return;
+            }
             temp.setVisible(true);
             BorderLayout layout = (BorderLayout) panel.getLayout();
             java.awt.Component comp = layout.getLayoutComponent(panel, BorderLayout.CENTER);
@@ -156,6 +165,8 @@ public class ReturnPanel extends JPanel {
             JOptionPane.showMessageDialog(null, "No se encontró ninguna venta con este UID.", "Devoluciones", 0);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Entrada inválida.", "Devoluciones", 0);
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(null, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.", "Devoluciones", 0);
         }
     }
 
@@ -173,6 +184,14 @@ public class ReturnPanel extends JPanel {
             txtValue.setText("");
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Los IDs y la cantidad deben ser números válidos.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "No se encontró el recurso solicitado: " + e.getMessage(), "Error en devolución", JOptionPane.ERROR_MESSAGE);
+        } catch (BusinessRuleException e) {
+            JOptionPane.showMessageDialog(this, "No se puede completar la operación: " + e.getMessage(), "Error en devolución", JOptionPane.ERROR_MESSAGE);
+        } catch (InvalidDataException e) {
+            JOptionPane.showMessageDialog(this, "Los datos ingresados no son válidos: " + e.getMessage(), "Error en devolución", JOptionPane.ERROR_MESSAGE);
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.", "Error en devolución", JOptionPane.ERROR_MESSAGE);
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error en devolución", JOptionPane.ERROR_MESSAGE);
         }
@@ -199,6 +218,8 @@ public class ReturnPanel extends JPanel {
                     r.getReimbursedAmount()
                 });
             }
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.");
         } catch (Exception e) {
             System.out.println("Error al cargar la tabla de devoluciones: " + e.getMessage());
         }
@@ -237,52 +258,58 @@ public class ReturnPanel extends JPanel {
         return pane;
     }
 
-    private JPanel createByCustomerTab(java.util.List<Return> returns) {
-        JPanel pane = new JPanel(new BorderLayout(5, 5));
-        JPanel customerSearch = new JPanel(new GridLayout(2, 4, 8, 8));
-        customerSearch.setBorder(BorderFactory.createTitledBorder("Consulta por Cliente"));
-        JButton btnSearchCustomer = new JButton("Buscar");
-        txtCustomerId = new JTextField();
-        try {
-            btnSearchCustomer.addActionListener(e -> {
-                long id = Long.parseLong(txtCustomerId.getText());
-                StringBuilder pIds = new StringBuilder();
-                pIds.setLength(0);
-                viewReturnsTableModel.setColumnIdentifiers(new String[]{"ID Cliente", "ID Empleado", "ID Devolución", "ID Venta", "Fecha", "Productos", "Motivo de Devolución", "Reembolso"});
-                viewReturnsTableModel.setRowCount(0);
-                for (Return r : returns) {
-                    if (r.getSale().getCustomer().getiD() == id) {
-                        var returned = r.getReturnedProducts();
-                        for (Product p : returned) {
-                            pIds.append("(").append(p.getProductId()).append(") ");
-                        }
-                        viewReturnsTableModel.addRow(new Object[]{
-                            r.getSale().getSeller().getEmployeeCode(),
-                            r.getSale().getCustomer().getiD(),
-                            r.getIdReturn(),
-                            r.getSale().getuId(),
-                            r.getDate(),
-                            pIds.toString(),
-                            r.getReturnReason(),
-                            r.getReimbursedAmount()
-                        });
-                        JOptionPane.showMessageDialog(null, "Se ha encontrado al cliente.", "Devoluciones", 0);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "No se encontró ningún cliente con este ID.", "Devoluciones", 0);
-                    }
-                }
-
-            });
-            customerSearch.add(new JLabel("ID de Cliente:"));
-            customerSearch.add(txtCustomerId, BorderLayout.NORTH);
-            customerSearch.add(btnSearchCustomer, BorderLayout.CENTER);
-            pane.add(customerSearch, BorderLayout.NORTH);
-            pane.add(new JScrollPane(viewReturnsTable), BorderLayout.CENTER);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Entrada inválida.", "Devoluciones", 0);
+private JPanel createByCustomerTab(java.util.List<Return> returns) {
+    JPanel pane = new JPanel(new BorderLayout(5, 5));
+    JPanel customerSearch = new JPanel(new GridLayout(2, 4, 8, 8));
+    customerSearch.setBorder(BorderFactory.createTitledBorder("Consulta por Cliente"));
+    JButton btnSearchCustomer = new JButton("Buscar");
+    txtCustomerId = new JTextField();
+    btnSearchCustomer.addActionListener(e -> {
+        String text = txtCustomerId.getText().trim();
+        if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese el ID del cliente.", "Devoluciones", 0);
+            return;
         }
-        return pane;
-    }
+        long id;
+        try {
+            id = Long.parseLong(text);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Entrada inválida.", "Devoluciones", 0);
+            return;
+        }
+        viewReturnsTableModel.setColumnIdentifiers(new String[]{"ID Cliente", "ID Empleado", "ID Devolución", "ID Venta", "Fecha", "Productos", "Motivo de Devolución", "Reembolso"});
+        viewReturnsTableModel.setRowCount(0);
+        for (Return r : returns) {
+            if (r.getSale().getCustomer().getiD() == id) {
+                StringBuilder pIds = new StringBuilder();
+                for (Product p : r.getReturnedProducts()) {
+                    pIds.append("(").append(p.getProductId()).append(") ");
+                }
+                viewReturnsTableModel.addRow(new Object[]{
+                    r.getSale().getCustomer().getiD(),
+                    r.getSale().getSeller().getEmployeeCode(),
+                    r.getIdReturn(),
+                    r.getSale().getuId(),
+                    r.getDate(),
+                    pIds.toString(),
+                    r.getReturnReason(),
+                    r.getReimbursedAmount()
+                });
+            }
+        }
+        if (viewReturnsTableModel.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "No se encontraron devoluciones para este cliente.", "Devoluciones", 0);
+        } else {
+            JOptionPane.showMessageDialog(null, "Se ha encontrado al cliente.", "Devoluciones", 0);
+        }
+    });
+    customerSearch.add(new JLabel("ID de Cliente:"));
+    customerSearch.add(txtCustomerId, BorderLayout.NORTH);
+    customerSearch.add(btnSearchCustomer, BorderLayout.CENTER);
+    pane.add(customerSearch, BorderLayout.NORTH);
+    pane.add(new JScrollPane(viewReturnsTable), BorderLayout.CENTER);
+    return pane;
+}
 
     private JPanel createIdSearchTab(java.util.List<Return> returns) {
         StringBuilder pIds = new StringBuilder();
@@ -353,6 +380,8 @@ public class ReturnPanel extends JPanel {
             );
         } catch (NumberFormatException | java.time.DateTimeException e) {
             JOptionPane.showMessageDialog(null, "Entrada inválida.", "Balance Mensual", 0);
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(null, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.", "Balance Mensual", 0);
         }
     }
 }

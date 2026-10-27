@@ -1,5 +1,9 @@
 package com.gamezone.ui;
 
+import com.gamezone.exceptions.BusinessRuleException;
+import com.gamezone.exceptions.InvalidDataException;
+import com.gamezone.exceptions.PersistenceException;
+import com.gamezone.exceptions.ResourceNotFoundException;
 import com.gamezone.model.Customer;
 import com.gamezone.model.Seller;
 import com.gamezone.model.Shift;
@@ -102,28 +106,42 @@ public class PersonPanel extends JPanel {
             refreshCustomerTable();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "ID y contacto deben ser números válidos.");
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+        } catch (ResourceNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "No se encontró el recurso solicitado: " + e.getMessage());
+        } catch (BusinessRuleException e) {
+            JOptionPane.showMessageDialog(this, "No se puede completar la operación: " + e.getMessage());
+        } catch (InvalidDataException e) {
+            JOptionPane.showMessageDialog(this, "Los datos ingresados no son válidos: " + e.getMessage());
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.");
         }
     }
 
     private void refreshCustomerTable() {
         customerTableModel.setRowCount(0);
-        ArrayList<Customer> customers = customerService.listCustomers();
-        for (Customer c : customers) {
-            customerTableModel.addRow(new Object[]{
-                    c.getiD(), c.getName(), c.geteMail(), c.getContactNumber()
-            });
+        try {
+            ArrayList<Customer> customers = customerService.listCustomers();
+            for (Customer c : customers) {
+                customerTableModel.addRow(new Object[]{
+                        c.getiD(), c.getName(), c.geteMail(), c.getContactNumber()
+                });
+            }
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.");
         }
     }
 
     private void refreshSellerTable() {
         sellerTableModel.setRowCount(0);
-        ArrayList<Seller> sellers = sellerService.listSellers();
-        for (Seller s : sellers) {
-            sellerTableModel.addRow(new Object[]{
-                    s.getEmployeeCode(), s.getName(), s.getShift(), s.getiD(), s.getContactNumber()
-            });
+        try {
+            ArrayList<Seller> sellers = sellerService.listSellers();
+            for (Seller s : sellers) {
+                sellerTableModel.addRow(new Object[]{
+                        s.getEmployeeCode(), s.getName(), s.getShift(), s.getiD(), s.getContactNumber()
+                });
+            }
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un problema al acceder a los datos del sistema. Contacte al administrador.");
         }
     }
 }
